@@ -1,0 +1,165 @@
+export const PERMISSIONS = {
+  // Tenant & Organization
+  TENANT_READ: 'tenant:read',
+  TENANT_UPDATE: 'tenant:update',
+  TENANT_SETTINGS: 'tenant:settings',
+  
+  // Users & Memberships
+  USERS_READ: 'users:read',
+  USERS_INVITE: 'users:invite',
+  USERS_UPDATE: 'users:update',
+  USERS_DEACTIVATE: 'users:deactivate',
+  
+  // Roles & Permissions
+  ROLES_MANAGE: 'roles:manage',
+  
+  // Audit Logs
+  AUDIT_READ: 'audit:read',
+  
+  // Sales & POS
+  SALES_READ: 'sales:read',
+  SALES_CREATE: 'sales:create',
+  SALES_REFUND: 'sales:refund',
+  POS_ACCESS: 'pos:access',
+  POS_SHIFT_MANAGE: 'pos:shift_manage',
+  
+  // Products & Inventory
+  PRODUCTS_READ: 'products:read',
+  PRODUCTS_CREATE: 'products:create',
+  PRODUCTS_UPDATE: 'products:update',
+  PRODUCTS_DELETE: 'products:delete',
+  INVENTORY_READ: 'inventory:read',
+  INVENTORY_ADJUST: 'inventory:adjust',
+  INVENTORY_TRANSFER: 'inventory:transfer',
+  INVENTORY_MANAGE: 'inventory:manage',
+  
+  // Customers & Suppliers (CRM)
+  CUSTOMERS_READ: 'customers:read',
+  CUSTOMERS_WRITE: 'customers:write',
+  SUPPLIERS_READ: 'suppliers:read',
+  SUPPLIERS_WRITE: 'suppliers:write',
+  
+  // Purchases
+  PURCHASES_READ: 'purchases:read',
+  PURCHASES_CREATE: 'purchases:create',
+  PURCHASES_APPROVE: 'purchases:approve',
+  
+  // Financials & Accounting (Money)
+  FINANCIALS_READ: 'financials:read',
+  FINANCIALS_POST: 'financials:post',
+  FINANCIALS_REPORTS: 'financials:reports',
+  
+  // Reports
+  REPORTS_VIEW: 'reports:view',
+  REPORTS_EXPORT: 'reports:export',
+  
+  // Tasks
+  TASKS_READ: 'tasks:read',
+  TASKS_WRITE: 'tasks:write',
+  
+  // Integrations
+  INTEGRATIONS_MANAGE: 'integrations:manage'
+} as const;
+
+export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
+
+export type SystemRole =
+  | 'Owner'
+  | 'Manager'
+  | 'Sales'
+  | 'Cashier'
+  | 'Inventory Manager'
+  | 'Accountant'
+  | 'Staff';
+
+export const ROLE_PERMISSIONS: Record<SystemRole, Permission[]> = {
+  Owner: Object.values(PERMISSIONS),
+  
+  Manager: [
+    PERMISSIONS.TENANT_READ,
+    PERMISSIONS.TENANT_UPDATE,
+    PERMISSIONS.USERS_READ,
+    PERMISSIONS.USERS_INVITE,
+    PERMISSIONS.USERS_UPDATE,
+    PERMISSIONS.AUDIT_READ,
+    PERMISSIONS.SALES_READ,
+    PERMISSIONS.SALES_CREATE,
+    PERMISSIONS.SALES_REFUND,
+    PERMISSIONS.POS_ACCESS,
+    PERMISSIONS.POS_SHIFT_MANAGE,
+    PERMISSIONS.PRODUCTS_READ,
+    PERMISSIONS.PRODUCTS_CREATE,
+    PERMISSIONS.PRODUCTS_UPDATE,
+    PERMISSIONS.INVENTORY_READ,
+    PERMISSIONS.INVENTORY_ADJUST,
+    PERMISSIONS.INVENTORY_TRANSFER,
+    PERMISSIONS.INVENTORY_MANAGE,
+    PERMISSIONS.CUSTOMERS_READ,
+    PERMISSIONS.CUSTOMERS_WRITE,
+    PERMISSIONS.SUPPLIERS_READ,
+    PERMISSIONS.SUPPLIERS_WRITE,
+    PERMISSIONS.PURCHASES_READ,
+    PERMISSIONS.PURCHASES_CREATE,
+    PERMISSIONS.PURCHASES_APPROVE,
+    PERMISSIONS.FINANCIALS_READ,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_EXPORT,
+    PERMISSIONS.TASKS_READ,
+    PERMISSIONS.TASKS_WRITE,
+  ],
+  
+  Sales: [
+    PERMISSIONS.SALES_READ,
+    PERMISSIONS.SALES_CREATE,
+    PERMISSIONS.POS_ACCESS,
+    PERMISSIONS.PRODUCTS_READ,
+    PERMISSIONS.CUSTOMERS_READ,
+    PERMISSIONS.CUSTOMERS_WRITE,
+    PERMISSIONS.TASKS_READ,
+  ],
+  
+  Cashier: [
+    PERMISSIONS.SALES_READ,
+    PERMISSIONS.SALES_CREATE,
+    PERMISSIONS.POS_ACCESS,
+    PERMISSIONS.PRODUCTS_READ,
+    PERMISSIONS.CUSTOMERS_READ,
+  ],
+  
+  'Inventory Manager': [
+    PERMISSIONS.PRODUCTS_READ,
+    PERMISSIONS.PRODUCTS_CREATE,
+    PERMISSIONS.PRODUCTS_UPDATE,
+    PERMISSIONS.PRODUCTS_DELETE,
+    PERMISSIONS.INVENTORY_READ,
+    PERMISSIONS.INVENTORY_ADJUST,
+    PERMISSIONS.INVENTORY_TRANSFER,
+    PERMISSIONS.INVENTORY_MANAGE,
+    PERMISSIONS.SUPPLIERS_READ,
+    PERMISSIONS.SUPPLIERS_WRITE,
+    PERMISSIONS.PURCHASES_READ,
+    PERMISSIONS.PURCHASES_CREATE,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.TASKS_READ,
+    PERMISSIONS.TASKS_WRITE,
+  ],
+  
+  Accountant: [
+    PERMISSIONS.FINANCIALS_READ,
+    PERMISSIONS.FINANCIALS_POST,
+    PERMISSIONS.FINANCIALS_REPORTS,
+    PERMISSIONS.SALES_READ,
+    PERMISSIONS.PURCHASES_READ,
+    PERMISSIONS.CUSTOMERS_READ,
+    PERMISSIONS.SUPPLIERS_READ,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_EXPORT,
+    PERMISSIONS.AUDIT_READ,
+  ],
+  
+  Staff: [
+    PERMISSIONS.PRODUCTS_READ,
+    PERMISSIONS.TASKS_READ,
+    PERMISSIONS.TASKS_WRITE,
+  ],
+};

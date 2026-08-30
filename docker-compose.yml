@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # =============================================================
+  # Universal ERP Application Service
+  # =============================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: universal-erp:latest
+    container_name: universal_erp_app
+    restart: always
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=${MONGODB_URI:-mongodb://erp_app_user:secure_prod_password@mongo:27017/universal_erp?authSource=admin}
+      - JWT_SECRET=${JWT_SECRET}
+      - COOKIE_SECRET=${COOKIE_SECRET}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000}
+    volumes:
+      - erp_uploads:/app/uploads
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - erp_network
+
+  # =============================================================
+  # Self-Hosted Production MongoDB Service (Optional)
+  # =============================================================
+  mongo:
+    image: mongo:7.0-jammy
+    container_name: universal_erp_mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME:-erp_admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-secure_root_password}
+      - MONGO_INITDB_DATABASE=universal_erp
+    volumes:
+      - erp_mongo_data:/data/db
+      - erp_mongo_config:/data/configdb
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - erp_network
+
+volumes:
+  erp_uploads:
+    name: erp_production_uploads
+  erp_mongo_data:
+    name: erp_production_mongo_data
+  erp_mongo_config:
+    name: erp_production_mongo_config
+
+networks:
+  erp_network:
+    name: erp_production_network
+    driver: bridge
