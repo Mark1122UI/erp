@@ -444,11 +444,10 @@ export function renderPublicPageShell(routePath) {
             <nav>
               <ul class="mkt-nav-links">
                 <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product')">Product</a></li>
-                <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/pos')">POS</a></li>
-                <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/inventory')">Inventory</a></li>
+                <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/industries/retail-ecommerce')">Industries</a></li>
+                <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/solutions/small-business')">Solutions</a></li>
                 <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/pricing')">Pricing</a></li>
                 <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/resources')">Resources</a></li>
-                <li><a class="mkt-nav-link" href="javascript:void(0)" onclick="window.navigateMarketing('/company/about')">About</a></li>
               </ul>
             </nav>
 
@@ -536,7 +535,7 @@ export function renderPublicPageShell(routePath) {
           </div>
 
           <!-- Action CTA Banner -->
-          <div style="text-align:center; padding:48px 24px; background:radial-gradient(ellipse at center, rgba(59, 130, 246, 0.15), transparent 70%), var(--mkt-bg-card); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl);">
+          <div style="text-align:center; padding:48px 24px; background:var(--mkt-bg-card-solid); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl); box-shadow:var(--mkt-shadow-md);">
             <h2 style="font-size:24px; font-weight:800; color:var(--mkt-text-main); margin-bottom:12px;">Ready to run your business on Universal ERP?</h2>
             <p style="color:var(--mkt-text-muted); font-size:14px; margin-bottom:24px;">Setup takes less than 5 minutes. No credit card required.</p>
             <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
@@ -630,9 +629,10 @@ export function renderPublicPageShell(routePath) {
         <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product'); window.toggleMarketingMenu()">Product Overview</a>
         <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/pos'); window.toggleMarketingMenu()">Point of Sale</a>
         <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/inventory'); window.toggleMarketingMenu()">Inventory</a>
+        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/barcode-scanner'); window.toggleMarketingMenu()">Barcode Scanner</a>
+        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/offline-pos'); window.toggleMarketingMenu()">Offline Mode</a>
         <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/pricing'); window.toggleMarketingMenu()">Pricing</a>
         <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/resources'); window.toggleMarketingMenu()">Resources</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/company/about'); window.toggleMarketingMenu()">About Us</a>
         <div style="margin-top:24px; display:flex; flex-direction:column; gap:10px;">
           <button class="mkt-btn mkt-btn-ghost" onclick="window.navigateMarketing('/auth/login'); window.toggleMarketingMenu()">Sign In</button>
           <button class="mkt-btn mkt-btn-primary" onclick="window.navigateMarketing('/auth/register'); window.toggleMarketingMenu()">Get Started Free</button>

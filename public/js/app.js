@@ -18,6 +18,8 @@ import { renderProductPaymentsPage } from './marketing/product-payments.js';
 import { renderProductDocumentsPage } from './marketing/product-documents.js';
 import { renderProductIntegrationsPage } from './marketing/product-integrations.js';
 import { renderProductReportsPage } from './marketing/product-reports.js';
+import { renderProductBarcodeScannerPage } from './marketing/product-barcode-scanner.js';
+import { renderProductOfflinePOSPage } from './marketing/product-offline-pos.js';
 
 // Global State
 const state = {
@@ -267,6 +269,49 @@ async function initApp() {
   }
 }
 
+// Update Page Title and SEO Metadata dynamically
+function updatePageMetadata(routePath) {
+  if (state.user) {
+    const formattedRoute = (routePath || 'dashboard').replace(/^\//, '').replace(/-/g, ' ').toUpperCase();
+    document.title = `${formattedRoute} — ${state.tenant?.name || 'Universal ERP'}`;
+    return;
+  }
+
+  const routeMeta = PUBLIC_ROUTES_REGISTRY[routePath];
+  if (routePath === '/' || routePath === 'home' || routePath === 'marketing' || routePath === '/home') {
+    document.title = 'Universal ERP — Business Operating System';
+  } else if (routePath === '/auth/login' || routePath === 'login' || routePath === '/login') {
+    document.title = 'Sign In — Universal ERP';
+  } else if (
+    routePath === '/auth/register' ||
+    routePath === 'register' ||
+    routePath === '/register' ||
+    routePath === '/auth/onboarding' ||
+    routePath === 'onboarding' ||
+    routePath === '/onboarding'
+  ) {
+    document.title = 'Start Free Trial — Universal ERP';
+  } else if (routeMeta) {
+    document.title = `${routeMeta.title} — Universal ERP`;
+  } else {
+    const cleanTitle = routePath.replace(/^\//, '').replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+    document.title = `${cleanTitle} — Universal ERP`;
+  }
+
+  // Update meta description tag dynamically
+  const metaDescEl = document.querySelector('meta[name="description"]');
+  if (metaDescEl) {
+    if (routeMeta?.description) {
+      metaDescEl.setAttribute('content', routeMeta.description);
+    } else {
+      metaDescEl.setAttribute(
+        'content',
+        'Universal ERP — High-performance business operating system for retail POS, multi-location inventory, sales invoicing, customer dues, and financial reports.'
+      );
+    }
+  }
+}
+
 // Global Renderer
 function renderApp() {
   const root = document.getElementById('app');
@@ -274,6 +319,8 @@ function renderApp() {
   if (state.isLoading) {
     return;
   }
+
+  updatePageMetadata(state.currentRoute);
 
   if (!state.user) {
     // 1. Auth Views
@@ -366,7 +413,19 @@ function renderApp() {
       return;
     }
 
-    // 14. Multi-Page Public Website Shells (Phase 23)
+    // 14. Barcode & Hardware Scanner Deep Dive (/product/barcode-scanner)
+    if (state.currentRoute === '/product/barcode-scanner') {
+      root.innerHTML = renderProductBarcodeScannerPage();
+      return;
+    }
+
+    // 15. Offline Resilience & Local-First POS Deep Dive (/product/offline-pos)
+    if (state.currentRoute === '/product/offline-pos') {
+      root.innerHTML = renderProductOfflinePOSPage();
+      return;
+    }
+
+    // 16. Multi-Page Public Website Shells (Phase 23)
     if (PUBLIC_ROUTES_REGISTRY[state.currentRoute] || state.currentRoute.startsWith('/product') || state.currentRoute.startsWith('/industries') || state.currentRoute.startsWith('/solutions') || state.currentRoute.startsWith('/pricing') || state.currentRoute.startsWith('/resources') || state.currentRoute.startsWith('/company')) {
       root.innerHTML = renderPublicPageShell(state.currentRoute);
       return;

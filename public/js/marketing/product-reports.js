@@ -5,61 +5,35 @@
 
 // Client-Side Interactive Controllers
 if (typeof window !== 'undefined') {
-  window.switchReportPeriod = (period) => {
+  // Sales Period Controller
+  window.switchReportSalesPeriod = (period) => {
     const periodData = {
-      today: { rev: 'PKR 248,500', profit: 'PKR 81,260', margin: '32.7%', rec: 'PKR 284,500', inv: 'PKR 4.82M', trend: '● Today Live' },
-      week: { rev: 'PKR 1,420,800', profit: 'PKR 468,900', margin: '33.0%', rec: 'PKR 284,500', inv: 'PKR 4.82M', trend: '↑ +8.4% vs last week' },
-      month: { rev: 'PKR 5,840,000', profit: 'PKR 1,927,200', margin: '33.0%', rec: 'PKR 284,500', inv: 'PKR 4.82M', trend: '↑ +14.8% vs last month' },
-      year: { rev: 'PKR 64,200,000', profit: 'PKR 21,186,000', margin: '33.0%', rec: 'PKR 284,500', inv: 'PKR 4.82M', trend: '↑ +22.1% YoY' }
+      today: { rev: 'PKR 248.5k', orders: '184', aov: 'PKR 5,916', trend: '● Today Live' },
+      week: { rev: 'PKR 1.42M', orders: '1,086', aov: 'PKR 6,120', trend: '↑ +8.4% vs last week' },
+      month: { rev: 'PKR 5.28M', orders: '4,920', aov: 'PKR 6,102', trend: '↑ +14.8% vs last month' }
     };
 
     const target = periodData[period] || periodData.today;
 
-    const revEl = document.getElementById('report-kpi-rev');
-    const profitEl = document.getElementById('report-kpi-profit');
-    const marginEl = document.getElementById('report-kpi-margin');
-    const trendEl = document.getElementById('report-kpi-trend');
+    const revEl = document.getElementById('sales-kpi-rev');
+    const ordEl = document.getElementById('sales-kpi-orders');
+    const aovEl = document.getElementById('sales-kpi-aov');
+    const trendEl = document.getElementById('sales-kpi-trend');
 
     if (revEl) revEl.innerText = target.rev;
-    if (profitEl) profitEl.innerText = target.profit;
-    if (marginEl) marginEl.innerText = target.margin;
+    if (ordEl) ordEl.innerText = target.orders;
+    if (aovEl) aovEl.innerText = target.aov;
     if (trendEl) trendEl.innerText = target.trend;
 
-    const btns = document.querySelectorAll('.report-period-btn');
+    const btns = document.querySelectorAll('.sales-period-btn');
     btns.forEach((btn) => {
       if (btn.getAttribute('data-period') === period) btn.classList.add('active');
       else btn.classList.remove('active');
     });
   };
 
-  window.switchReportLocation = (loc) => {
-    const locData = {
-      all: { rev: 'PKR 527,200', txCount: '248 Orders', aov: 'PKR 2,125', topItem: 'Dark Roast Coffee (1kg)' },
-      store01: { rev: 'PKR 248,500', txCount: '124 Orders', aov: 'PKR 2,004', topItem: 'Dark Roast Coffee (1kg)' },
-      store02: { rev: 'PKR 182,300', txCount: '86 Orders', aov: 'PKR 2,119', topItem: 'Organic Green Tea (250g)' },
-      online: { rev: 'PKR 96,400', txCount: '38 Orders', aov: 'PKR 2,536', topItem: 'Ceramic Brand Mugs (Set)' }
-    };
-
-    const target = locData[loc] || locData.all;
-
-    const locRevEl = document.getElementById('report-loc-rev');
-    const locTxEl = document.getElementById('report-loc-tx');
-    const locAovEl = document.getElementById('report-loc-aov');
-    const locItemEl = document.getElementById('report-loc-item');
-
-    if (locRevEl) locRevEl.innerText = target.rev;
-    if (locTxEl) locTxEl.innerText = target.txCount;
-    if (locAovEl) locAovEl.innerText = target.aov;
-    if (locItemEl) locItemEl.innerText = target.topItem;
-
-    const btns = document.querySelectorAll('.report-loc-btn');
-    btns.forEach((btn) => {
-      if (btn.getAttribute('data-loc') === loc) btn.classList.add('active');
-      else btn.classList.remove('active');
-    });
-  };
-
-  window.filterCustomerReports = (segment) => {
+  // Customer Segmentation Filter
+  window.filterReportCustomers = (segment) => {
     const rows = document.querySelectorAll('.cust-report-row');
     const btns = document.querySelectorAll('.cust-seg-btn');
 
@@ -78,10 +52,75 @@ if (typeof window !== 'undefined') {
     });
   };
 
-  window.triggerReportAction = (actionName) => {
+  // Location Selector
+  window.switchReportLocation = (loc) => {
+    const locData = {
+      all: { name: 'All Locations (Consolidated)', rev: 'PKR 527,200', orders: '407', profit: 'PKR 172,400', stock: 'PKR 3.90M' },
+      store01: { name: 'Store 01 (Commercial)', rev: 'PKR 248,500', orders: '184', profit: 'PKR 81,150', stock: 'PKR 1.82M' },
+      store02: { name: 'Store 02 (Mall)', rev: 'PKR 182,300', orders: '141', profit: 'PKR 58,400', stock: 'PKR 1.24M' },
+      online: { name: 'Online Store (E-Commerce)', rev: 'PKR 96,400', orders: '82', profit: 'PKR 32,850', stock: 'PKR 0.84M' }
+    };
+
+    const target = locData[loc] || locData.all;
+
+    const nameEl = document.getElementById('loc-active-title');
+    const revEl = document.getElementById('loc-kpi-rev');
+    const ordEl = document.getElementById('loc-kpi-orders');
+    const profitEl = document.getElementById('loc-kpi-profit');
+    const stockEl = document.getElementById('loc-kpi-stock');
+
+    if (nameEl) nameEl.innerText = target.name;
+    if (revEl) revEl.innerText = target.rev;
+    if (ordEl) ordEl.innerText = target.orders;
+    if (profitEl) profitEl.innerText = target.profit;
+    if (stockEl) stockEl.innerText = target.stock;
+
+    const btns = document.querySelectorAll('.report-loc-btn');
+    btns.forEach((btn) => {
+      if (btn.getAttribute('data-loc') === loc) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+  };
+
+  // Report Library Search & Filter
+  window.searchReports = (query) => {
+    const cards = document.querySelectorAll('.report-lib-card');
+    const q = (query || '').toLowerCase().trim();
+
+    cards.forEach((c) => {
+      const text = c.textContent.toLowerCase();
+      if (!q || text.includes(q)) {
+        c.style.display = 'flex';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  };
+
+  window.filterReportLibrary = (cat) => {
+    const cards = document.querySelectorAll('.report-lib-card');
+    const btns = document.querySelectorAll('.report-lib-filter-btn');
+
+    btns.forEach((b) => {
+      if (b.getAttribute('data-cat') === cat) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+
+    cards.forEach((c) => {
+      const cardCat = c.getAttribute('data-cat');
+      if (cat === 'all' || cardCat === cat) {
+        c.style.display = 'flex';
+      } else {
+        c.style.display = 'none';
+      }
+    });
+  };
+
+  // Action Feedback Toast
+  window.triggerReportAction = (actionName, targetDoc = 'Report') => {
     const toast = document.getElementById('report-action-toast');
     if (toast) {
-      toast.innerText = `✓ Report action: "${actionName}" executed. Layout formatted.`;
+      toast.innerText = `✓ ${actionName} prepared for ${targetDoc}. Export formatted.`;
       toast.style.display = 'block';
       setTimeout(() => {
         toast.style.display = 'none';
@@ -96,8 +135,8 @@ export function renderProductReportsPage() {
       <div class="mkt-ambient-glow"></div>
 
       <!-- Action Feedback Toast -->
-      <div id="report-action-toast" style="display:none; position:fixed; bottom:24px; right:24px; z-index:9999; background:#10b981; color:#ffffff; padding:12px 20px; border-radius:var(--mkt-radius-md); font-weight:700; font-size:13px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
-        ✓ Report action executed
+      <div id="report-action-toast" style="display:none; position:fixed; bottom:24px; right:24px; z-index:99999; background:#10b981; color:#ffffff; padding:12px 20px; border-radius:var(--mkt-radius-md); font-weight:700; font-size:13px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+        ✓ Action executed
       </div>
 
       <!-- Navigation Header -->
@@ -143,37 +182,46 @@ export function renderProductReportsPage() {
               </div>
 
               <h1 class="mkt-hero-title">
-                See What Your Business Is Doing.<br>
-                <span class="mkt-gradient-text-accent">Know Why. Act Faster.</span>
+                See What Your Business<br>
+                <span class="mkt-gradient-text-accent">Is Really Doing.</span>
               </h1>
 
               <p class="mkt-hero-subtitle">
-                Turn sales, inventory, purchasing, payments and customer activity into clear real-time business insights.
+                Turn sales, inventory, purchasing, payments and customer activity into clear business reports — without rebuilding the numbers in spreadsheets.
               </p>
 
               <div class="mkt-hero-actions">
                 <button class="mkt-btn mkt-btn-primary mkt-btn-lg" onclick="window.navigateMarketing('/auth/register')">
-                  <span>Start Tracking Performance</span>
+                  <span>Start Analyzing</span>
                   <span>→</span>
                 </button>
-                <a class="mkt-btn mkt-btn-secondary mkt-btn-lg" href="#reports-demo" style="text-decoration:none;">
-                  <span>See Reports In Action</span>
-                </a>
+                <button class="mkt-btn mkt-btn-secondary mkt-btn-lg" onclick="document.getElementById('reports-demo').scrollIntoView({ behavior: 'smooth' })">
+                  <span>Explore Reports</span>
+                </button>
               </div>
 
-              <!-- Quick Badges -->
-              <div style="display:flex; gap:16px; margin-top:28px; flex-wrap:wrap; font-size:13px; color:var(--mkt-text-muted);">
-                <span>✓ Real-Time Profit & Loss</span>
-                <span>•</span>
-                <span>✓ Stock Turnover Rates</span>
-                <span>•</span>
-                <span>✓ Multi-Location Breakdown</span>
+              <div class="mkt-hero-metrics">
+                <div class="mkt-metric-item">
+                  <div class="mkt-metric-val">100%</div>
+                  <div class="mkt-metric-lbl">Ledger Linked</div>
+                </div>
+                <div class="mkt-metric-divider"></div>
+                <div class="mkt-metric-item">
+                  <div class="mkt-metric-val">&lt; 1s</div>
+                  <div class="mkt-metric-lbl">Instant Generation</div>
+                </div>
+                <div class="mkt-metric-divider"></div>
+                <div class="mkt-metric-item">
+                  <div class="mkt-metric-val">0</div>
+                  <div class="mkt-metric-lbl">Manual Sheets</div>
+                </div>
               </div>
             </div>
 
-            <!-- Analytics Command Center Mockup -->
+            <!-- Command Center Hero Mockup -->
             <div class="mkt-hero-right" id="reports-demo">
               <div class="mkt-dash-preview-frame">
+                
                 <div class="mkt-dash-chrome">
                   <div class="mkt-dash-dots">
                     <span class="mkt-dot red"></span>
@@ -182,68 +230,75 @@ export function renderProductReportsPage() {
                   </div>
                   <div class="mkt-dash-url-pill">
                     <span>🔒</span>
-                    <span>app.universalerp.com/reports</span>
+                    <span>app.universalerp.com/reports/command-center</span>
                   </div>
                   <div class="mkt-dash-status-pill">
                     <span class="mkt-status-dot"></span>
-                    <span>EXECUTIVE SUITE</span>
+                    <span>LIVE KPI FEED</span>
                   </div>
                 </div>
 
-                <div class="mkt-dash-body" style="padding:16px;">
+                <div class="mkt-dash-body">
                   
-                  <!-- Metric Cards -->
-                  <div class="mkt-dash-metrics-grid" style="margin-bottom:14px;">
-                    <div class="mkt-dash-stat-card">
-                      <div class="mkt-dash-stat-label">Today's Revenue</div>
-                      <div class="mkt-dash-stat-value" style="font-family:var(--mkt-font-mono);">PKR 248,500</div>
-                      <div class="mkt-dash-stat-trend positive">↑ +14.8% vs avg</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+                    <div>
+                      <div style="font-size:16px; font-weight:800; color:#fff;">Executive Financial Command</div>
+                      <div style="font-size:12px; color:var(--mkt-text-muted);">Real-time multi-branch operational rollup</div>
                     </div>
-                    <div class="mkt-dash-stat-card">
-                      <div class="mkt-dash-stat-label">Gross Profit</div>
-                      <div class="mkt-dash-stat-value" style="font-family:var(--mkt-font-mono); color:#34d399;">PKR 81,260</div>
-                      <div class="mkt-dash-stat-trend positive">32.7% Margin</div>
-                    </div>
-                    <div class="mkt-dash-stat-card">
-                      <div class="mkt-dash-stat-label">Receivables</div>
-                      <div class="mkt-dash-stat-value" style="font-family:var(--mkt-font-mono); color:#fbbf24;">PKR 284,500</div>
-                      <div class="mkt-dash-stat-trend neutral">3 Credit Accounts</div>
-                    </div>
-                    <div class="mkt-dash-stat-card">
-                      <div class="mkt-dash-stat-label">Inventory Valuation</div>
-                      <div class="mkt-dash-stat-value" style="font-family:var(--mkt-font-mono); color:#60a5fa;">PKR 4.82M</div>
-                      <div class="mkt-dash-stat-trend positive">6.4x Turnover</div>
+                    <div style="display:flex; gap:6px;">
+                      <span class="mkt-badge mkt-badge-cyan" style="font-size:11px;">📅 Today: 31 Aug 2026</span>
+                      <span class="mkt-badge mkt-badge-cyan" style="font-size:11px;">🏢 All Locations</span>
                     </div>
                   </div>
 
-                  <!-- Live Analytics Activity Feed -->
-                  <div class="mkt-dash-feed-box">
-                    <div class="mkt-dash-feed-header">
-                      <span class="mkt-feed-title">Executive Insight Feed</span>
-                      <span class="mkt-badge mkt-badge-cyan">Real-Time</span>
+                  <!-- 6 Hero KPIs -->
+                  <div class="mkt-dash-metrics-grid" style="grid-template-columns:repeat(3, 1fr);">
+                    <div class="mkt-dash-stat-card">
+                      <div class="mkt-dash-stat-label">Today's Revenue</div>
+                      <div class="mkt-dash-stat-value" style="color:#60a5fa;">PKR 248,500</div>
+                      <div class="mkt-dash-stat-trend positive">↑ +14.2% vs yesterday</div>
                     </div>
-                    <div class="mkt-dash-feed-list">
-                      <div class="mkt-activity-item">
-                        <div class="mkt-activity-left">
-                          <span class="mkt-activity-dot" style="background:#10b981;"></span>
-                          <span>Store 01 reached monthly sales target 4 days ahead of schedule</span>
-                        </div>
-                        <span class="mkt-activity-time">Just now</span>
-                      </div>
-                      <div class="mkt-activity-item">
-                        <div class="mkt-activity-left">
-                          <span class="mkt-activity-dot" style="background:#3b82f6;"></span>
-                          <span>Dark Roast Coffee generated PKR 48,582 gross profit today</span>
-                        </div>
-                        <span class="mkt-activity-time">15m ago</span>
-                      </div>
-                      <div class="mkt-activity-item">
-                        <div class="mkt-activity-left">
-                          <span class="mkt-activity-dot" style="background:#fbbf24;"></span>
-                          <span>PKR 18,400 receivable from Summit Tech Cafe settled in cash</span>
-                        </div>
-                        <span class="mkt-activity-time">1h ago</span>
-                      </div>
+                    <div class="mkt-dash-stat-card">
+                      <div class="mkt-dash-stat-label">Gross Profit</div>
+                      <div class="mkt-dash-stat-value" style="color:#34d399;">PKR 81,150</div>
+                      <div class="mkt-dash-stat-trend positive">↑ Margin: 32.7%</div>
+                    </div>
+                    <div class="mkt-dash-stat-card">
+                      <div class="mkt-dash-stat-label">Receivables</div>
+                      <div class="mkt-dash-stat-value" style="color:#fbbf24;">PKR 284,500</div>
+                      <div class="mkt-dash-stat-trend neutral">● 14 Open Invoices</div>
+                    </div>
+                    <div class="mkt-dash-stat-card">
+                      <div class="mkt-dash-stat-label">Inventory Value</div>
+                      <div class="mkt-dash-stat-value">PKR 4.82M</div>
+                      <div class="mkt-dash-stat-trend neutral">● 2,410 Units On Hand</div>
+                    </div>
+                    <div class="mkt-dash-stat-card">
+                      <div class="mkt-dash-stat-label">Operating Expenses</div>
+                      <div class="mkt-dash-stat-value" style="color:#f87171;">PKR 18,400</div>
+                      <div class="mkt-dash-stat-trend neutral">● Utilities & Logistics</div>
+                    </div>
+                    <div class="mkt-dash-stat-card">
+                      <div class="mkt-dash-stat-label">Net Daily Flow</div>
+                      <div class="mkt-dash-stat-value" style="color:#a78bfa;">+PKR 62,750</div>
+                      <div class="mkt-dash-stat-trend positive">↑ Profitable Shift</div>
+                    </div>
+                  </div>
+
+                  <!-- Visual Chart Simulation -->
+                  <div class="mkt-dash-feed-box" style="margin-top:12px;">
+                    <div class="mkt-dash-feed-header">
+                      <span class="mkt-feed-title">Hourly Revenue Velocity</span>
+                      <span class="mkt-badge mkt-badge-cyan">Peak: 14:00 - 16:00</span>
+                    </div>
+                    <div style="display:flex; align-items:flex-end; gap:8px; height:70px; padding:8px 0; border-bottom:1px solid var(--mkt-border);">
+                      <div style="flex:1; background:rgba(59,130,246,0.3); height:30%; border-radius:4px 4px 0 0;" title="10:00"></div>
+                      <div style="flex:1; background:rgba(59,130,246,0.4); height:45%; border-radius:4px 4px 0 0;" title="11:00"></div>
+                      <div style="flex:1; background:rgba(59,130,246,0.5); height:60%; border-radius:4px 4px 0 0;" title="12:00"></div>
+                      <div style="flex:1; background:rgba(59,130,246,0.7); height:85%; border-radius:4px 4px 0 0;" title="13:00"></div>
+                      <div style="flex:1; background:linear-gradient(180deg, #3b82f6, #06b6d4); height:100%; border-radius:4px 4px 0 0;" title="14:00 (Peak)"></div>
+                      <div style="flex:1; background:rgba(59,130,246,0.8); height:90%; border-radius:4px 4px 0 0;" title="15:00"></div>
+                      <div style="flex:1; background:rgba(59,130,246,0.6); height:70%; border-radius:4px 4px 0 0;" title="16:00"></div>
                     </div>
                   </div>
 
@@ -263,168 +318,154 @@ export function renderProductReportsPage() {
           
           <div class="mkt-section-header">
             <div class="mkt-pill-badge">
-              <span>UNIFIED DATA ENGINE</span>
+              <span>UNIFIED TRANSACTION PIPELINE</span>
             </div>
             <h2 class="mkt-section-title">One Business. One Source Of Truth.</h2>
             <p class="mkt-section-subtitle">
-              Never stitch together spreadsheets again. Universal ERP links every cash register, invoice, stock movement and purchase order into one automated reporting core.
+              Never re-enter numbers into spreadsheet tabs. Reports stream directly from real operational transactions across every register, warehouse, and bank account.
             </p>
           </div>
 
-          <!-- Data Pipeline Flow -->
-          <div style="background:var(--mkt-bg-surface); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl); padding:32px 20px; max-width:900px; margin:32px auto 0 auto; text-align:center;">
-            
-            <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:20px;">
-              <span class="mkt-pill">POS Sales</span>
-              <span>+</span>
-              <span class="mkt-pill">Invoices</span>
-              <span>+</span>
-              <span class="mkt-pill">Payments</span>
-              <span>+</span>
-              <span class="mkt-pill">Inventory</span>
-              <span>+</span>
-              <span class="mkt-pill">Purchasing</span>
-              <span>+</span>
-              <span class="mkt-pill">Expenses</span>
+          <!-- 9-Stage Pipeline Visualization -->
+          <div style="background:var(--mkt-bg-surface); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl); padding:32px 20px; overflow-x:auto;">
+            <div style="display:flex; align-items:center; justify-content:space-between; min-width:860px; gap:8px;">
+              
+              <div style="text-align:center; flex:1;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(59,130,246,0.15); color:#60a5fa; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18px;">⚡</div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">Sales</div>
+                <div style="font-size:10px; color:var(--mkt-text-dim);">Counter POS</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(16,185,129,0.15); color:#34d399; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18px;">💳</div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">Payments</div>
+                <div style="font-size:10px; color:var(--mkt-text-dim);">Cash & Card</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(6,182,212,0.15); color:#22d3ee; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18px;">📦</div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">Inventory</div>
+                <div style="font-size:10px; color:var(--mkt-text-dim);">Stock Valued</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(245,158,11,0.15); color:#fbbf24; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18px;">🛍️</div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">Purchasing</div>
+                <div style="font-size:10px; color:var(--mkt-text-dim);">PO & Bills</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(139,92,246,0.15); color:#a78bfa; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18px;">👥</div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">Customers</div>
+                <div style="font-size:10px; color:var(--mkt-text-dim);">Credit & CRM</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(244,63,94,0.15); color:#fb7185; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18px;">🚚</div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">Suppliers</div>
+                <div style="font-size:10px; color:var(--mkt-text-dim);">Payables</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1;">
+                <div style="width:40px; height:40px; border-radius:10px; background:rgba(239,68,68,0.15); color:#f87171; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; font-size:18px;">🧾</div>
+                <div style="font-size:12px; font-weight:700; color:#fff;">Expenses</div>
+                <div style="font-size:10px; color:var(--mkt-text-dim);">Operating Costs</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1.2; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.4); border-radius:var(--mkt-radius-md); padding:10px 6px;">
+                <div style="font-size:13px; font-weight:800; color:#60a5fa;">📊 Reports</div>
+                <div style="font-size:10px; color:#93c5fd;">Automatic P&L</div>
+              </div>
+              <div style="color:var(--mkt-text-dim);">→</div>
+
+              <div style="text-align:center; flex:1.3; background:linear-gradient(135deg, #10b981, #06b6d4); border-radius:var(--mkt-radius-md); padding:10px 6px; color:#fff; box-shadow:0 4px 14px rgba(16,185,129,0.3);">
+                <div style="font-size:13px; font-weight:800;">💡 Decisions</div>
+                <div style="font-size:10px; opacity:0.9;">Profitable Growth</div>
+              </div>
+
             </div>
-
-            <div style="margin:16px 0; font-size:20px;">⬇️</div>
-
-            <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); padding:10px 24px; border-radius:var(--mkt-radius-full); font-weight:800; color:#93c5fd; margin-bottom:20px;">
-              <span>🌐</span>
-              <span>UNIVERSAL ERP DATA CORE</span>
-            </div>
-
-            <div style="margin:16px 0; font-size:20px;">⬇️</div>
-
-            <div style="display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap;">
-              <div class="mkt-feature-card" style="padding:12px 20px; text-align:center;"><b style="color:#34d399;">📊 Automated Reports</b></div>
-              <div class="mkt-feature-card" style="padding:12px 20px; text-align:center;"><b style="color:#60a5fa;">💡 Business Insights</b></div>
-              <div class="mkt-feature-card" style="padding:12px 20px; text-align:center;"><b style="color:#fbbf24;">⚡ Confident Decisions</b></div>
-            </div>
-
           </div>
 
         </div>
       </section>
 
       <!-- =========================================================================
-           SECTION 3: EXECUTIVE DASHBOARD
+           SECTION 3: PROFIT & LOSS DASHBOARD
            ========================================================================= -->
       <section class="mkt-section">
-        <div class="mkt-container">
-          
-          <div class="mkt-section-header">
-            <div class="mkt-pill-badge">
-              <span>EXECUTIVE CONTROL</span>
-            </div>
-            <h2 class="mkt-section-title">Executive Performance Dashboard.</h2>
-            <p class="mkt-section-subtitle">
-              Monitor vital commercial metrics across custom time windows with instant client-side updates.
-            </p>
-          </div>
-
-          <!-- Timeframe Tabs -->
-          <div class="mkt-tour-tabs" style="margin-bottom:24px;">
-            <button class="mkt-tab-btn report-period-btn active" data-period="today" onclick="window.switchReportPeriod('today')">Today</button>
-            <button class="mkt-tab-btn report-period-btn" data-period="week" onclick="window.switchReportPeriod('week')">This Week</button>
-            <button class="mkt-tab-btn report-period-btn" data-period="month" onclick="window.switchReportPeriod('month')">This Month</button>
-            <button class="mkt-tab-btn report-period-btn" data-period="year" onclick="window.switchReportPeriod('year')">This Year</button>
-          </div>
-
-          <!-- Interactive Executive Dashboard Container -->
-          <div style="background:var(--mkt-bg-surface); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl); padding:28px; max-width:900px; margin:0 auto;">
-            
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:20px;">
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Total Revenue</div>
-                <div class="mkt-dash-stat-value" id="report-kpi-rev" style="font-family:var(--mkt-font-mono);">PKR 248,500</div>
-                <div class="mkt-dash-stat-trend positive" id="report-kpi-trend">● Today Live</div>
-              </div>
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Gross Profit</div>
-                <div class="mkt-dash-stat-value" id="report-kpi-profit" style="font-family:var(--mkt-font-mono); color:#34d399;">PKR 81,260</div>
-                <div class="mkt-dash-stat-trend positive" id="report-kpi-margin">32.7% Margin</div>
-              </div>
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Operating Expenses</div>
-                <div class="mkt-dash-stat-value" style="font-family:var(--mkt-font-mono); color:#f87171;">PKR 18,400</div>
-                <div class="mkt-dash-stat-trend neutral">Rent & Utilities</div>
-              </div>
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Net Operating Income</div>
-                <div class="mkt-dash-stat-value" style="font-family:var(--mkt-font-mono); color:#60a5fa;">PKR 62,860</div>
-                <div class="mkt-dash-stat-trend positive">25.3% Net Margin</div>
-              </div>
-            </div>
-
-            <!-- Visual Performance Bar -->
-            <div style="background:rgba(255,255,255,0.02); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px; color:var(--mkt-text-muted);">
-                <span>Gross Revenue Distribution</span>
-                <span>COGS: 67.3% | Gross Profit: 32.7%</span>
-              </div>
-              <div style="height:12px; width:100%; border-radius:var(--mkt-radius-full); background:#1e293b; display:flex; overflow:hidden;">
-                <div style="width:67.3%; background:#475569;" title="Cost of Goods Sold"></div>
-                <div style="width:32.7%; background:#10b981;" title="Gross Profit"></div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      <!-- =========================================================================
-           SECTION 4: PROFIT & LOSS REPORT
-           ========================================================================= -->
-      <section class="mkt-section" style="background:var(--mkt-bg-secondary); border-top:1px solid var(--mkt-border); border-bottom:1px solid var(--mkt-border);">
         <div class="mkt-container">
           
           <div class="mkt-section-header">
             <div class="mkt-pill-badge">
               <span>FINANCIAL STATEMENTS</span>
             </div>
-            <h2 class="mkt-section-title">Automated Profit & Loss Statement.</h2>
+            <h2 class="mkt-section-title">Automated Profit & Loss Statement</h2>
             <p class="mkt-section-subtitle">
-              Audited income statements calculated automatically from posted customer sales, vendor procurement, and operating expenses.
+              Understand your net profit at any moment. Calculated automatically from cost-of-goods-sold (COGS) and categorized operating expenses.
             </p>
           </div>
 
-          <!-- P&L Statement Box -->
-          <div style="background:#ffffff; color:#0f172a; border-radius:var(--mkt-radius-xl); padding:32px; max-width:780px; margin:32px auto 0 auto; box-shadow:0 16px 36px rgba(0,0,0,0.4); font-family:var(--mkt-font-mono); font-size:13px;">
+          <div class="mkt-feature-card" style="max-width:960px; margin:0 auto; padding:28px;">
             
-            <div style="display:flex; justify-content:space-between; border-bottom:2px solid #0f172a; padding-bottom:12px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--mkt-border);">
               <div>
-                <div style="font-size:18px; font-weight:800; font-family:var(--mkt-font-sans);">APEX SUPERSTORE • P&L STATEMENT</div>
-                <div style="font-size:11px; color:#64748b;">Period: 01 Aug 2026 - 31 Aug 2026 • Currency: PKR</div>
+                <div style="font-size:18px; font-weight:800; color:#fff;">P&L Statement: August 2026 (Monthly Rollup)</div>
+                <div style="font-size:12px; color:var(--mkt-text-muted);">Accounting Method: Accrual Basis • Currency: PKR</div>
               </div>
-              <div class="badge in-stock" style="font-family:var(--mkt-font-sans); height:fit-content;">AUDITED</div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <div style="display:flex; justify-content:space-between;"><span>Gross Sales</span><b>PKR 1,480,000.00</b></div>
-              <div style="display:flex; justify-content:space-between; color:#dc2626;"><span>Less: Discounts Allowed (−)</span><span>PKR 24,000.00</span></div>
-              <div style="display:flex; justify-content:space-between; color:#dc2626;"><span>Less: Sales Returns (−)</span><span>PKR 16,000.00</span></div>
-              <div style="display:flex; justify-content:space-between; border-top:1px solid #cbd5e1; padding-top:6px; font-weight:700;"><span>Net Sales Revenue</span><b>PKR 1,440,000.00</b></div>
-
-              <div style="display:flex; justify-content:space-between; color:#64748b; margin-top:8px;"><span>Cost of Goods Sold (COGS) (−)</span><span>PKR 968,000.00</span></div>
-              <div style="display:flex; justify-content:space-between; border-top:1px solid #cbd5e1; padding-top:6px; font-weight:800; color:#059669; font-size:15px;">
-                <span>GROSS PROFIT (32.8%)</span>
-                <span>PKR 472,000.00</span>
-              </div>
-
-              <div style="display:flex; justify-content:space-between; color:#dc2626; margin-top:8px;"><span>Total Operating Expenses (−)</span><span>PKR 148,000.00</span></div>
-              <div style="display:flex; justify-content:space-between; border-top:2px solid #0f172a; padding-top:8px; font-weight:900; color:#1e40af; font-size:16px;">
-                <span>NET OPERATING PROFIT (22.5%)</span>
-                <span>PKR 324,000.00</span>
+              <div style="display:flex; gap:8px;">
+                <button class="mkt-btn mkt-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="window.triggerReportAction('Details opened', 'P&L Statement')">🔍 View Details</button>
+                <button class="mkt-btn mkt-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="window.triggerReportAction('PDF Exported', 'P&L Statement')">📥 Export PDF</button>
+                <button class="mkt-btn mkt-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="window.triggerReportAction('CSV Downloaded', 'P&L Statement')">📊 Download CSV</button>
               </div>
             </div>
 
-            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px; font-family:var(--mkt-font-sans);">
-              <button class="mkt-btn mkt-btn-secondary" style="color:#0f172a; border-color:#cbd5e1; padding:6px 12px; font-size:12px;" onclick="window.triggerReportAction('P&L Exported to PDF')">📄 Export PDF</button>
-              <button class="mkt-btn mkt-btn-secondary" style="color:#0f172a; border-color:#cbd5e1; padding:6px 12px; font-size:12px;" onclick="window.triggerReportAction('P&L Sent to Printer')">🖨️ Print Report</button>
-              <button class="mkt-btn mkt-btn-secondary" style="color:#0f172a; border-color:#cbd5e1; padding:6px 12px; font-size:12px;" onclick="window.triggerReportAction('P&L Downloaded as CSV')">📥 CSV</button>
+            <!-- Visual Waterfall Breakdown -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; margin-bottom:24px;">
+              <div style="background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.25); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim); text-transform:uppercase;">1. Total Revenue</div>
+                <div style="font-size:20px; font-weight:800; color:#60a5fa; margin-top:4px;">PKR 527,200</div>
+                <div style="font-size:11px; color:var(--mkt-text-muted); margin-top:2px;">100% of Sales</div>
+              </div>
+              <div style="background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.25); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim); text-transform:uppercase;">2. Cost of Goods (COGS)</div>
+                <div style="font-size:20px; font-weight:800; color:#fbbf24; margin-top:4px;">-PKR 354,800</div>
+                <div style="font-size:11px; color:var(--mkt-text-muted); margin-top:2px;">67.3% Direct Cost</div>
+              </div>
+              <div style="background:rgba(6,182,212,0.06); border:1px solid rgba(6,182,212,0.25); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim); text-transform:uppercase;">3. Gross Profit</div>
+                <div style="font-size:20px; font-weight:800; color:#22d3ee; margin-top:4px;">PKR 172,400</div>
+                <div style="font-size:11px; color:#34d399; margin-top:2px; font-weight:700;">32.7% Gross Margin</div>
+              </div>
+              <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.25); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim); text-transform:uppercase;">4. Operating Expenses</div>
+                <div style="font-size:20px; font-weight:800; color:#f87171; margin-top:4px;">-PKR 48,000</div>
+                <div style="font-size:11px; color:var(--mkt-text-muted); margin-top:2px;">Rent, Utilities, Staff</div>
+              </div>
+              <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.35); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:#34d399; text-transform:uppercase; font-weight:700;">5. Net Operating Profit</div>
+                <div style="font-size:20px; font-weight:800; color:#34d399; margin-top:4px;">PKR 124,400</div>
+                <div style="font-size:11px; color:#34d399; margin-top:2px; font-weight:700;">23.6% Net Margin</div>
+              </div>
+            </div>
+
+            <!-- Comparison Bar -->
+            <div style="background:rgba(0,0,0,0.3); padding:16px; border-radius:var(--mkt-radius-md); border:1px solid var(--mkt-border);">
+              <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:8px;">
+                <span>Revenue Allocation Distribution</span>
+                <span style="font-weight:700; color:#34d399;">PKR 124,400 Net Retained</span>
+              </div>
+              <div style="height:12px; background:#1e293b; border-radius:6px; overflow:hidden; display:flex;">
+                <div style="width:67.3%; background:#fbbf24;" title="COGS: 67.3%"></div>
+                <div style="width:9.1%; background:#f87171;" title="OpEx: 9.1%"></div>
+                <div style="width:23.6%; background:#34d399;" title="Net Profit: 23.6%"></div>
+              </div>
             </div>
 
           </div>
@@ -433,204 +474,332 @@ export function renderProductReportsPage() {
       </section>
 
       <!-- =========================================================================
-           SECTION 5: SALES ANALYTICS
-           ========================================================================= -->
-      <section class="mkt-section">
-        <div class="mkt-container">
-          
-          <div class="mkt-section-header">
-            <div class="mkt-pill-badge">
-              <span>SALES INTELLIGENCE</span>
-            </div>
-            <h2 class="mkt-section-title">Sales Analytics & Channel Insights.</h2>
-            <p class="mkt-section-subtitle">
-              Filter revenues, average order value, and top SKU performance by retail counter or online channel.
-            </p>
-          </div>
-
-          <!-- Location Selector Tabs -->
-          <div class="mkt-tour-tabs" style="margin-bottom:24px;">
-            <button class="mkt-tab-btn report-loc-btn active" data-loc="all" onclick="window.switchReportLocation('all')">All Locations</button>
-            <button class="mkt-tab-btn report-loc-btn" data-loc="store01" onclick="window.switchReportLocation('store01')">Store 01 (Commercial)</button>
-            <button class="mkt-tab-btn report-loc-btn" data-loc="store02" onclick="window.switchReportLocation('store02')">Store 02 (Mall)</button>
-            <button class="mkt-tab-btn report-loc-btn" data-loc="online" onclick="window.switchReportLocation('online')">Online Store</button>
-          </div>
-
-          <div style="background:var(--mkt-bg-surface); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl); padding:28px; max-width:900px; margin:0 auto;">
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Channel Revenue</div>
-                <div class="mkt-dash-stat-value" id="report-loc-rev" style="font-family:var(--mkt-font-mono);">PKR 527,200</div>
-              </div>
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Transaction Volume</div>
-                <div class="mkt-dash-stat-value" id="report-loc-tx" style="font-family:var(--mkt-font-mono);">248 Orders</div>
-              </div>
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Average Order Value</div>
-                <div class="mkt-dash-stat-value" id="report-loc-aov" style="font-family:var(--mkt-font-mono);">PKR 2,125</div>
-              </div>
-              <div class="mkt-dash-stat-card">
-                <div class="mkt-dash-stat-label">Top Selling Item</div>
-                <div class="mkt-dash-stat-value" id="report-loc-item" style="font-size:13px; font-weight:700;">Dark Roast Coffee (1kg)</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- =========================================================================
-           SECTION 6: INVENTORY ANALYTICS
+           SECTION 4: SALES ANALYTICS
            ========================================================================= -->
       <section class="mkt-section" style="background:var(--mkt-bg-secondary); border-top:1px solid var(--mkt-border); border-bottom:1px solid var(--mkt-border);">
         <div class="mkt-container">
           
           <div class="mkt-section-header">
             <div class="mkt-pill-badge">
-              <span>STOCK OPTIMIZATION</span>
+              <span>REVENUE VELOCITY</span>
             </div>
-            <h2 class="mkt-section-title">Inventory Valuation & Stock Turnover.</h2>
+            <h2 class="mkt-section-title">Deep Sales & Order Analytics</h2>
             <p class="mkt-section-subtitle">
-              Eliminate dead capital by monitoring stock velocity, fast-moving items, and stockout reorder triggers.
+              Monitor average order values (AOV), transaction counts, and revenue pacing with real-time period filters.
             </p>
           </div>
 
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; max-width:900px; margin:32px auto 0 auto;">
-            <div class="mkt-feature-card" style="padding:22px; text-align:center;">
-              <div style="font-size:24px; margin-bottom:6px;">📦</div>
-              <h4 style="font-size:14px; font-weight:700; color:var(--mkt-text-main);">Inventory Valuation</h4>
-              <div style="font-size:18px; font-weight:800; color:#34d399; margin:4px 0; font-family:var(--mkt-font-mono);">PKR 4.82M</div>
-              <small style="color:var(--mkt-text-muted);">Weighted average cost</small>
-            </div>
-            <div class="mkt-feature-card" style="padding:22px; text-align:center;">
-              <div style="font-size:24px; margin-bottom:6px;">🔄</div>
-              <h4 style="font-size:14px; font-weight:700; color:var(--mkt-text-main);">Stock Turnover Rate</h4>
-              <div style="font-size:18px; font-weight:800; color:#60a5fa; margin:4px 0; font-family:var(--mkt-font-mono);">6.4x / Year</div>
-              <small style="color:var(--mkt-text-muted);">High liquidity ratio</small>
-            </div>
-            <div class="mkt-feature-card" style="padding:22px; text-align:center;">
-              <div style="font-size:24px; margin-bottom:6px;">⚠️</div>
-              <h4 style="font-size:14px; font-weight:700; color:var(--mkt-text-main);">Reorder Triggers</h4>
-              <div style="font-size:18px; font-weight:800; color:#fbbf24; margin:4px 0; font-family:var(--mkt-font-mono);">2 SKUs</div>
-              <small style="color:var(--mkt-text-muted);">Below minimum threshold</small>
-            </div>
-            <div class="mkt-feature-card" style="padding:22px; text-align:center;">
-              <div style="font-size:24px; margin-bottom:6px;">⚡</div>
-              <h4 style="font-size:14px; font-weight:700; color:var(--mkt-text-main);">Fastest Moving</h4>
-              <div style="font-size:18px; font-weight:800; color:#34d399; margin:4px 0; font-family:var(--mkt-font-mono);">Coffee Beans</div>
-              <small style="color:var(--mkt-text-muted);">184 units / week</small>
-            </div>
-          </div>
-
-          <div style="text-align:center; margin-top:24px;">
-            <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/inventory')" style="font-size:13px; font-weight:700; color:#60a5fa; text-decoration:none;">
-              Explore Multi-Location Inventory Engine →
-            </a>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- =========================================================================
-           SECTION 7: PURCHASING & SUPPLIER ANALYTICS
-           ========================================================================= -->
-      <section class="mkt-section">
-        <div class="mkt-container">
-          
-          <div class="mkt-section-header">
-            <div class="mkt-pill-badge">
-              <span>PROCUREMENT ANALYTICS</span>
-            </div>
-            <h2 class="mkt-section-title">Purchasing Spend & Vendor Performance.</h2>
-            <p class="mkt-section-subtitle">
-              Monitor procurement disbursements, supplier lead times, and accounts payable commitments.
-            </p>
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:850px; margin:32px auto 0 auto;">
-            <div class="mkt-feature-card" style="padding:24px;">
-              <h4 style="font-size:16px; font-weight:700; color:var(--mkt-text-main); margin-bottom:8px;">Purchasing Metrics</h4>
-              <div style="font-family:var(--mkt-font-mono); font-size:13px; display:flex; flex-direction:column; gap:6px;">
-                <div style="display:flex; justify-content:space-between;"><span>Monthly Spend:</span><b>PKR 840,000</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Open Purchase Orders:</span><b>3 POs</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Pending Deliveries (GRNs):</span><b style="color:#fbbf24;">1 Pending</b></div>
-              </div>
-              <div style="margin-top:16px;">
-                <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/purchasing')" style="font-size:12px; font-weight:700; color:#60a5fa; text-decoration:none;">→ Purchasing & POs</a>
-              </div>
-            </div>
-
-            <div class="mkt-feature-card" style="padding:24px;">
-              <h4 style="font-size:16px; font-weight:700; color:var(--mkt-text-main); margin-bottom:8px;">Vendor Payables</h4>
-              <div style="font-family:var(--mkt-font-mono); font-size:13px; display:flex; flex-direction:column; gap:6px;">
-                <div style="display:flex; justify-content:space-between;"><span>Direct Trade Coffee:</span><b>PKR 84,500</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Indus Packaging:</span><b>PKR 18,200</b></div>
-                <div style="display:flex; justify-content:space-between;"><span>Total Accounts Payable:</span><b style="color:#f87171;">PKR 102,700</b></div>
-              </div>
-              <div style="margin-top:16px;">
-                <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/suppliers')" style="font-size:12px; font-weight:700; color:#60a5fa; text-decoration:none;">→ Suppliers & Vendors</a>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- =========================================================================
-           SECTION 8: CUSTOMER & RECEIVABLES ANALYTICS
-           ========================================================================= -->
-      <section class="mkt-section" style="background:var(--mkt-bg-secondary); border-top:1px solid var(--mkt-border); border-bottom:1px solid var(--mkt-border);">
-        <div class="mkt-container">
-          
-          <div class="mkt-section-header">
-            <div class="mkt-pill-badge">
-              <span>CUSTOMER CRM ANALYTICS</span>
-            </div>
-            <h2 class="mkt-section-title">Customer Segmentation & Receivables Aging.</h2>
-            <p class="mkt-section-subtitle">
-              Track customer lifetime value, repeat frequency, and outstanding credit aging without risk of bad debt.
-            </p>
-          </div>
-
-          <!-- Customer Segmentation Filters -->
-          <div style="background:var(--mkt-bg-surface); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl); padding:28px; max-width:850px; margin:32px auto 0 auto;">
+          <div class="mkt-feature-card" style="max-width:960px; margin:0 auto; padding:28px;">
             
-            <div style="display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap;">
-              <button class="mkt-btn mkt-btn-secondary cust-seg-btn active" data-seg="all" onclick="window.filterCustomerReports('all')" style="padding:4px 10px; font-size:11px;">All Accounts</button>
-              <button class="mkt-btn mkt-btn-secondary cust-seg-btn" data-seg="vip" onclick="window.filterCustomerReports('vip')" style="padding:4px 10px; font-size:11px;">VIP Clients</button>
-              <button class="mkt-btn mkt-btn-secondary cust-seg-btn" data-seg="credit" onclick="window.filterCustomerReports('credit')" style="padding:4px 10px; font-size:11px;">Credit Ledgers</button>
-              <button class="mkt-btn mkt-btn-secondary cust-seg-btn" data-seg="overdue" onclick="window.filterCustomerReports('overdue')" style="padding:4px 10px; font-size:11px;">Overdue (>30d)</button>
+            <!-- Period Tabs -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+              <div style="display:flex; gap:8px;">
+                <button class="mkt-tab-btn sales-period-btn active" data-period="today" onclick="window.switchReportSalesPeriod('today')">Today</button>
+                <button class="mkt-tab-btn sales-period-btn" data-period="week" onclick="window.switchReportSalesPeriod('week')">This Week</button>
+                <button class="mkt-tab-btn sales-period-btn" data-period="month" onclick="window.switchReportSalesPeriod('month')">This Month</button>
+              </div>
+              <span id="sales-kpi-trend" class="mkt-badge mkt-badge-cyan">● Today Live</span>
+            </div>
+
+            <!-- Dynamic KPI Cards -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
+              <div class="mkt-dash-stat-card">
+                <div class="mkt-dash-stat-label">Total Period Sales</div>
+                <div id="sales-kpi-rev" class="mkt-dash-stat-value" style="color:#60a5fa;">PKR 248.5k</div>
+                <div class="mkt-dash-stat-trend positive">Instant register sync</div>
+              </div>
+              <div class="mkt-dash-stat-card">
+                <div class="mkt-dash-stat-label">Completed Orders</div>
+                <div id="sales-kpi-orders" class="mkt-dash-stat-value">184</div>
+                <div class="mkt-dash-stat-trend positive">Counter + Online</div>
+              </div>
+              <div class="mkt-dash-stat-card">
+                <div class="mkt-dash-stat-label">Average Order Value (AOV)</div>
+                <div id="sales-kpi-aov" class="mkt-dash-stat-value" style="color:#34d399;">PKR 5,916</div>
+                <div class="mkt-dash-stat-trend positive">Basket size optimized</div>
+              </div>
+            </div>
+
+            <!-- Top Products Sold Table -->
+            <div class="mkt-mockup-table" style="margin-top:20px;">
+              <div class="mkt-tbl-row head"><span>Top Product</span><span>Category</span><span>Units Sold</span><span>Revenue</span><span>Margin</span></div>
+              <div class="mkt-tbl-row"><span>☕ Dark Roast Arabica (1kg)</span><span>Coffee Beans</span><b>64 Units</b><b style="color:#60a5fa;">PKR 166,400</b><span class="badge in-stock">36.5%</span></div>
+              <div class="mkt-tbl-row"><span>🥛 Barista Oat Milk (1L)</span><span>Dairy & Milk</span><b>48 Units</b><b style="color:#60a5fa;">PKR 38,400</b><span class="badge in-stock">28.0%</span></div>
+              <div class="mkt-tbl-row"><span>🍵 Organic Green Tea (250g)</span><span>Specialty Tea</span><b>22 Units</b><b style="color:#60a5fa;">PKR 20,900</b><span class="badge in-stock">34.2%</span></div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           SECTION 5: INVENTORY ANALYTICS
+           ========================================================================= -->
+      <section class="mkt-section">
+        <div class="mkt-container">
+          
+          <div class="mkt-section-header">
+            <div class="mkt-pill-badge">
+              <span>STOCK VALUATION & TURNOVER</span>
+            </div>
+            <h2 class="mkt-section-title">Inventory Intelligence & Valuation</h2>
+            <p class="mkt-section-subtitle">
+              Prevent dead capital and stockouts. Track fast-moving items, low-stock reorder alerts, and true inventory asset worth.
+            </p>
+          </div>
+
+          <!-- 5 Inventory Metric Pillars -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; max-width:1080px; margin:0 auto 24px;">
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+              <div style="font-size:11px; color:var(--mkt-text-dim);">Total Stock Valuation</div>
+              <div style="font-size:18px; font-weight:800; color:#60a5fa; margin-top:2px;">PKR 4.82M</div>
+              <div style="font-size:11px; color:var(--mkt-text-muted);">2,410 Units Total</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+              <div style="font-size:11px; color:var(--mkt-text-dim);">Fast Moving Items</div>
+              <div style="font-size:18px; font-weight:800; color:#34d399; margin-top:2px;">86 SKUs</div>
+              <div style="font-size:11px; color:#34d399;">High Velocity</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+              <div style="font-size:11px; color:var(--mkt-text-dim);">Low Stock Alerts</div>
+              <div style="font-size:18px; font-weight:800; color:#fbbf24; margin-top:2px;">18 SKUs</div>
+              <div style="font-size:11px; color:#fbbf24;">Below Min Threshold</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+              <div style="font-size:11px; color:var(--mkt-text-dim);">Critical Out of Stock</div>
+              <div style="font-size:18px; font-weight:800; color:#f87171; margin-top:2px;">6 SKUs</div>
+              <div style="font-size:11px; color:#f87171;">Reorder Immediate</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+              <div style="font-size:11px; color:var(--mkt-text-dim);">Dead Stock Trapped</div>
+              <div style="font-size:18px; font-weight:800; color:#a78bfa; margin-top:2px;">PKR 184,500</div>
+              <div style="font-size:11px; color:var(--mkt-text-muted);">&gt; 90 Days Inactive</div>
+            </div>
+          </div>
+
+          <!-- Stock Performance Table Mockup -->
+          <div class="mkt-feature-card" style="max-width:1080px; margin:0 auto; padding:24px;">
+            <div class="mkt-mockup-table">
+              <div class="mkt-tbl-row head"><span>Product</span><span>SKU</span><span>Units Sold (30d)</span><span>On Hand</span><span>Stock Value</span><span>Status</span></div>
+              <div class="mkt-tbl-row"><span>☕ Dark Roast Arabica (1kg)</span><span style="font-family:var(--mkt-font-mono);">COF-DR-1KG</span><span>601 Units</span><b>430 Units</b><b>PKR 1,118,000</b><span class="badge in-stock">OPTIMAL</span></div>
+              <div class="mkt-tbl-row"><span>🥛 Barista Oat Milk (1L)</span><span style="font-family:var(--mkt-font-mono);">MLK-OAT-1L</span><span>420 Units</span><b>18 Units</b><b>PKR 14,400</b><span class="badge low-stock">LOW STOCK</span></div>
+              <div class="mkt-tbl-row"><span>🍯 Caramel Syrup (750ml)</span><span style="font-family:var(--mkt-font-mono);">SYR-CAR-750</span><span>98 Units</span><b>4 Units</b><b>PKR 7,000</b><span class="badge out-of-stock" style="color:#f87171; background:rgba(239,68,68,0.15);">CRITICAL</span></div>
+              <div class="mkt-tbl-row"><span>🍵 Organic Green Tea (250g)</span><span style="font-family:var(--mkt-font-mono);">TEA-GRN-250</span><span>180 Units</span><b>94 Units</b><b>PKR 89,300</b><span class="badge in-stock">HEALTHY</span></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:12px; border-top:1px solid var(--mkt-border);">
+              <span style="font-size:13px; color:var(--mkt-text-muted);">Stock movement ledger synced across Stores & Warehouse.</span>
+              <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/inventory')" style="font-size:13px; font-weight:700; color:#60a5fa; text-decoration:none;">
+                Explore Dedicated Inventory Solution →
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           SECTION 6: PURCHASING & SUPPLIER ANALYTICS
+           ========================================================================= -->
+      <section class="mkt-section" style="background:var(--mkt-bg-secondary); border-top:1px solid var(--mkt-border); border-bottom:1px solid var(--mkt-border);">
+        <div class="mkt-container">
+          
+          <div class="mkt-section-header">
+            <div class="mkt-pill-badge">
+              <span>PROCUREMENT INTELLIGENCE</span>
+            </div>
+            <h2 class="mkt-section-title">Purchasing & Vendor Payables Analytics</h2>
+            <p class="mkt-section-subtitle">
+              Track outstanding payables, fulfillment lead times, and supplier performance rankings from draft PO to bill settlement.
+            </p>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px; max-width:1080px; margin:0 auto 24px;">
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Total Purchase Value</div>
+              <div class="mkt-dash-stat-value" style="color:#60a5fa;">PKR 785,600</div>
+              <div class="mkt-dash-stat-trend positive">This Month</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Open Purchase Orders</div>
+              <div class="mkt-dash-stat-value">12 POs</div>
+              <div class="mkt-dash-stat-trend neutral">Awaiting Delivery</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Supplier Payables</div>
+              <div class="mkt-dash-stat-value" style="color:#fbbf24;">PKR 284,500</div>
+              <div class="mkt-dash-stat-trend neutral">Pending Settlement</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Due This Week</div>
+              <div class="mkt-dash-stat-value" style="color:#f87171;">PKR 74,000</div>
+              <div class="mkt-dash-stat-trend neutral">Cash Allocated</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Avg Supplier Lead Time</div>
+              <div class="mkt-dash-stat-value" style="color:#34d399;">4.2 Days</div>
+              <div class="mkt-dash-stat-trend positive">↓ 1.1d Improvement</div>
+            </div>
+          </div>
+
+          <!-- Procurement Lifecycle Strip & Ranking -->
+          <div class="mkt-feature-card" style="max-width:1080px; margin:0 auto; padding:24px;">
+            <div style="background:rgba(0,0,0,0.3); padding:16px; border-radius:var(--mkt-radius-md); border:1px solid var(--mkt-border); margin-bottom:20px;">
+              <div style="font-size:12px; font-weight:700; color:var(--mkt-text-dim); text-transform:uppercase; margin-bottom:8px;">End-to-End Procurement Flow:</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:13px; font-weight:700;">
+                <span style="color:#93c5fd;">1. Supplier</span><span>→</span>
+                <span style="color:#93c5fd;">2. Purchase Orders</span><span>→</span>
+                <span style="color:#93c5fd;">3. GRN Inspection</span><span>→</span>
+                <span style="color:#93c5fd;">4. Vendor Bill</span><span>→</span>
+                <span style="color:#93c5fd;">5. Payment Voucher</span><span>→</span>
+                <span style="color:#34d399;">6. Payables Cleared</span>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+              <span style="font-size:13px; color:var(--mkt-text-muted);">Connected with vendor catalog and purchase ledger.</span>
+              <div style="display:flex; gap:12px;">
+                <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/purchasing')" style="font-size:13px; font-weight:700; color:#60a5fa; text-decoration:none;">→ Purchasing & POs</a>
+                <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/suppliers')" style="font-size:13px; font-weight:700; color:#60a5fa; text-decoration:none;">→ Suppliers Hub</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           SECTION 7: CUSTOMER & RECEIVABLES ANALYTICS
+           ========================================================================= -->
+      <section class="mkt-section">
+        <div class="mkt-container">
+          
+          <div class="mkt-section-header">
+            <div class="mkt-pill-badge">
+              <span>CUSTOMER CRM & AR</span>
+            </div>
+            <h2 class="mkt-section-title">Customer & Receivables Analytics</h2>
+            <p class="mkt-section-subtitle">
+              Monitor active customer counts, repeat purchase loyalty rates, approved credit limits, and overdue payment aging.
+            </p>
+          </div>
+
+          <!-- Customer Metric Pillars -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; max-width:1080px; margin:0 auto 24px;">
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Total Customers</div>
+              <div class="mkt-dash-stat-value">2,840</div>
+              <div class="mkt-dash-stat-trend positive">+142 this month</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Active Customers</div>
+              <div class="mkt-dash-stat-value" style="color:#34d399;">2,416</div>
+              <div class="mkt-dash-stat-trend positive">85.1% Retention</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Repeat Rate</div>
+              <div class="mkt-dash-stat-value" style="color:#60a5fa;">68%</div>
+              <div class="mkt-dash-stat-trend positive">↑ High Loyalty</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Outstanding AR</div>
+              <div class="mkt-dash-stat-value" style="color:#fbbf24;">PKR 284,500</div>
+              <div class="mkt-dash-stat-trend neutral">Within Terms</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Overdue Balance</div>
+              <div class="mkt-dash-stat-value" style="color:#f87171;">PKR 18,400</div>
+              <div class="mkt-dash-stat-trend negative">3 Accounts Alert</div>
+            </div>
+            <div class="mkt-dash-stat-card">
+              <div class="mkt-dash-stat-label">Avg Customer Value</div>
+              <div class="mkt-dash-stat-value" style="color:#a78bfa;">PKR 18,450</div>
+              <div class="mkt-dash-stat-trend positive">Lifetime Spend</div>
+            </div>
+          </div>
+
+          <!-- Customer Segmentation Table with Filter -->
+          <div class="mkt-feature-card" style="max-width:1080px; margin:0 auto; padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+              <div style="display:flex; gap:8px;">
+                <button class="mkt-tab-btn cust-seg-btn active" data-seg="all" onclick="window.filterReportCustomers('all')">All Customers</button>
+                <button class="mkt-tab-btn cust-seg-btn" data-seg="vip" onclick="window.filterReportCustomers('vip')">VIP Tier</button>
+                <button class="mkt-tab-btn cust-seg-btn" data-seg="credit" onclick="window.filterReportCustomers('credit')">Credit Accounts</button>
+                <button class="mkt-tab-btn cust-seg-btn" data-seg="overdue" onclick="window.filterReportCustomers('overdue')">Overdue Only</button>
+              </div>
+              <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/customers')" style="font-size:13px; font-weight:700; color:#60a5fa; text-decoration:none;">
+                Explore Customer CRM →
+              </a>
             </div>
 
             <div class="mkt-mockup-table">
-              <div class="mkt-tbl-row head"><span>Customer Name</span><span>Tier</span><span>Total Orders</span><span>Balance</span><span>Status</span></div>
-              <div class="mkt-tbl-row cust-report-row" data-seg="vip">
-                <span>Summit Tech Cafe</span>
-                <span class="badge in-stock">VIP</span>
-                <span>48 Orders</span>
-                <b style="font-family:var(--mkt-font-mono);">PKR 53,980</b>
-                <span class="badge in-stock">Current</span>
+              <div class="mkt-tbl-row head"><span>Customer Name</span><span>Tier</span><span>Orders</span><span>Total Spend</span><span>Outstanding</span><span>Health</span></div>
+              <div class="mkt-tbl-row cust-report-row" data-seg="vip"><span>Summit Tech Cafe</span><span class="badge in-stock">VIP</span><span>42 Orders</span><b>PKR 1,248,500</b><span style="color:#34d399;">PKR 0.00</span><span style="color:#34d399;">100% On-Time</span></div>
+              <div class="mkt-tbl-row cust-report-row" data-seg="credit"><span>Artisan Bakery Group</span><span class="badge in-stock">WHOLESALE</span><span>18 Orders</span><b>PKR 540,000</b><span style="color:#fbbf24;">PKR 53,980</span><span style="color:#60a5fa;">Current (Net 15)</span></div>
+              <div class="mkt-tbl-row cust-report-row" data-seg="overdue"><span>Metro Retail Outlets</span><span class="badge low-stock">CREDIT</span><span>9 Orders</span><b>PKR 284,000</b><span style="color:#f87171; font-weight:800;">PKR 18,400</span><span style="color:#f87171;">7 Days Overdue</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           SECTION 8: CASH FLOW & PAYMENT ANALYTICS
+           ========================================================================= -->
+      <section class="mkt-section" style="background:var(--mkt-bg-secondary); border-top:1px solid var(--mkt-border); border-bottom:1px solid var(--mkt-border);">
+        <div class="mkt-container">
+          
+          <div class="mkt-section-header">
+            <div class="mkt-pill-badge">
+              <span>TREASURY & TENDER SPLIT</span>
+            </div>
+            <h2 class="mkt-section-title">Cash Flow & Payment Method Analytics</h2>
+            <p class="mkt-section-subtitle">
+              Verify tender breakdowns and track continuous financial liquidity across cash drawers, bank transfers, and credit accounts.
+            </p>
+          </div>
+
+          <div class="mkt-feature-card" style="max-width:960px; margin:0 auto; padding:28px;">
+            
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px;">
+              <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim);">💵 Cash Collections</div>
+                <div style="font-size:20px; font-weight:800; color:#34d399; margin-top:4px;">42%</div>
+                <div style="font-size:12px; color:var(--mkt-text-muted); margin-top:2px;">PKR 221,424 in Drawers</div>
               </div>
-              <div class="mkt-tbl-row cust-report-row" data-seg="credit">
-                <span>Metro Retail Mart</span>
-                <span class="badge in-stock">Commercial</span>
-                <span>24 Orders</span>
-                <b style="font-family:var(--mkt-font-mono);">PKR 142,000</b>
-                <span class="badge in-stock">Net 30</span>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim);">💳 Card Terminal Swipes</div>
+                <div style="font-size:20px; font-weight:800; color:#60a5fa; margin-top:4px;">28%</div>
+                <div style="font-size:12px; color:var(--mkt-text-muted); margin-top:2px;">PKR 147,616 Batch Settled</div>
               </div>
-              <div class="mkt-tbl-row cust-report-row" data-seg="overdue">
-                <span>Green Basket Organic</span>
-                <span class="badge low-stock">Retail</span>
-                <span>12 Orders</span>
-                <b style="color:#f87171; font-family:var(--mkt-font-mono);">PKR 18,400</b>
-                <span class="badge low-stock">Overdue 8d</span>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim);">🏦 Direct Bank Transfer (IBFT)</div>
+                <div style="font-size:20px; font-weight:800; color:#22d3ee; margin-top:4px;">20%</div>
+                <div style="font-size:12px; color:var(--mkt-text-muted); margin-top:2px;">PKR 105,440 Reconciled</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.03); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:16px;">
+                <div style="font-size:11px; color:var(--mkt-text-dim);">🛡️ Customer Credit</div>
+                <div style="font-size:20px; font-weight:800; color:#fbbf24; margin-top:4px;">10%</div>
+                <div style="font-size:12px; color:var(--mkt-text-muted); margin-top:2px;">PKR 52,720 Ledger AR</div>
               </div>
             </div>
 
-            <div style="text-align:center; margin-top:20px;">
-              <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/customers')" style="font-size:12px; font-weight:700; color:#60a5fa; text-decoration:none;">
-                Explore Customers & CRM →
+            <!-- Cash Flow Timeline -->
+            <div style="background:rgba(0,0,0,0.3); padding:16px; border-radius:var(--mkt-radius-md); border:1px solid var(--mkt-border);">
+              <div style="font-size:12px; font-weight:700; color:var(--mkt-text-dim); text-transform:uppercase; margin-bottom:10px;">Daily Cash Movement Timeline:</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:13px; font-weight:700;">
+                <span style="color:#93c5fd;">Opening: PKR 45,000</span><span>+</span>
+                <span style="color:#34d399;">Collections: PKR 527,200</span><span>−</span>
+                <span style="color:#f87171;">Expenses: PKR 48,000</span><span>−</span>
+                <span style="color:#fb7185;">Refunds: PKR 4,200</span><span>=</span>
+                <span style="color:#34d399; font-size:15px; font-weight:800;">Closing: PKR 520,000</span>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+              <a href="javascript:void(0)" onclick="window.navigateMarketing('/product/payments')" style="font-size:13px; font-weight:700; color:#60a5fa; text-decoration:none;">
+                Explore Payments & Expenses →
               </a>
             </div>
 
@@ -647,69 +816,281 @@ export function renderProductReportsPage() {
           
           <div class="mkt-section-header">
             <div class="mkt-pill-badge">
-              <span>BRANCH BENCHMARKING</span>
+              <span>BRANCH COMPARISON</span>
             </div>
-            <h2 class="mkt-section-title">Multi-Location Branch Performance.</h2>
+            <h2 class="mkt-section-title">Multi-Location Branch Performance</h2>
             <p class="mkt-section-subtitle">
-              Compare revenue contribution, profit margins, and operational costs across all physical stores and online channels.
+              Compare revenue, orders, gross profit, and localized stock values across every retail store and depot.
             </p>
           </div>
 
-          <!-- Multi-Location Table -->
-          <div style="background:var(--mkt-bg-surface); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-xl); padding:28px; max-width:900px; margin:32px auto 0 auto;">
-            <div class="mkt-mockup-table">
-              <div class="mkt-tbl-row head"><span>Branch Location</span><span>Today Revenue</span><span>Gross Margin</span><span>Orders</span><span>Contribution</span></div>
-              <div class="mkt-tbl-row"><span>Store 01 (Commercial Plaza)</span><b style="font-family:var(--mkt-font-mono);">PKR 248,500</b><span style="color:#34d399;">34.2%</span><span>124</span><span class="badge in-stock">47.1%</span></div>
-              <div class="mkt-tbl-row"><span>Store 02 (Mall Branch)</span><b style="font-family:var(--mkt-font-mono);">PKR 182,300</b><span style="color:#fbbf24;">30.8%</span><span>86</span><span class="badge in-stock">34.6%</span></div>
-              <div class="mkt-tbl-row"><span>Online Web Storefront</span><b style="font-family:var(--mkt-font-mono);">PKR 96,400</b><span style="color:#34d399;">35.4%</span><span>38</span><span class="badge in-stock">18.3%</span></div>
-              <div class="mkt-tbl-row" style="border-top:2px solid var(--mkt-border); font-weight:800;">
-                <span>Consolidated Enterprise Total</span>
-                <b style="color:#60a5fa; font-family:var(--mkt-font-mono);">PKR 527,200</b>
-                <span style="color:#34d399;">33.0%</span>
-                <span>248</span>
-                <span class="badge in-stock">100.0%</span>
+          <div class="mkt-feature-card" style="max-width:1080px; margin:0 auto; padding:28px;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+              <div>
+                <div id="loc-active-title" style="font-size:16px; font-weight:800; color:#fff;">All Locations (Consolidated)</div>
+                <div style="font-size:12px; color:var(--mkt-text-muted);">Real-time multi-branch sync active</div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="mkt-tab-btn report-loc-btn active" data-loc="all" onclick="window.switchReportLocation('all')">All Locations</button>
+                <button class="mkt-tab-btn report-loc-btn" data-loc="store01" onclick="window.switchReportLocation('store01')">Store 01</button>
+                <button class="mkt-tab-btn report-loc-btn" data-loc="store02" onclick="window.switchReportLocation('store02')">Store 02</button>
+                <button class="mkt-tab-btn report-loc-btn" data-loc="online" onclick="window.switchReportLocation('online')">Online Store</button>
               </div>
             </div>
+
+            <!-- Dynamic Selected Location Snapshot -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:24px;">
+              <div class="mkt-dash-stat-card">
+                <div class="mkt-dash-stat-label">Branch Revenue</div>
+                <div id="loc-kpi-rev" class="mkt-dash-stat-value" style="color:#60a5fa;">PKR 527,200</div>
+              </div>
+              <div class="mkt-dash-stat-card">
+                <div class="mkt-dash-stat-label">Branch Orders</div>
+                <div id="loc-kpi-orders" class="mkt-dash-stat-value">407 Orders</div>
+              </div>
+              <div class="mkt-dash-stat-card">
+                <div class="mkt-dash-stat-label">Gross Profit</div>
+                <div id="loc-kpi-profit" class="mkt-dash-stat-value" style="color:#34d399;">PKR 172,400</div>
+              </div>
+              <div class="mkt-dash-stat-card">
+                <div class="mkt-dash-stat-label">Local Stock Value</div>
+                <div id="loc-kpi-stock" class="mkt-dash-stat-value">PKR 3.90M</div>
+              </div>
+            </div>
+
+            <!-- Multi-Location Master Table -->
+            <div class="mkt-mockup-table">
+              <div class="mkt-tbl-row head"><span>Location</span><span>Revenue</span><span>Orders</span><span>Gross Profit</span><span>Stock Value</span><span>Status</span></div>
+              <div class="mkt-tbl-row"><span>🏪 Store 01 (Commercial)</span><b>PKR 248,500</b><span>184 Orders</span><b style="color:#34d399;">PKR 81,150</b><span>PKR 1.82M</span><span class="badge in-stock">ONLINE</span></div>
+              <div class="mkt-tbl-row"><span>🏬 Store 02 (Mall)</span><b>PKR 182,300</b><span>141 Orders</span><b style="color:#34d399;">PKR 58,400</b><span>PKR 1.24M</span><span class="badge in-stock">ONLINE</span></div>
+              <div class="mkt-tbl-row"><span>🛍️ Online Store (E-Commerce)</span><b>PKR 96,400</b><span>82 Orders</span><b style="color:#34d399;">PKR 32,850</b><span>PKR 0.84M</span><span class="badge in-stock">SYNCED</span></div>
+            </div>
+
           </div>
 
         </div>
       </section>
 
       <!-- =========================================================================
-           SECTION 10: REAL-TIME REPORTS & AUTOMATED INSIGHTS
+           SECTION 10: REPORT LIBRARY & EXPORT CENTER
            ========================================================================= -->
       <section class="mkt-section" style="background:var(--mkt-bg-secondary); border-top:1px solid var(--mkt-border); border-bottom:1px solid var(--mkt-border);">
         <div class="mkt-container">
           
           <div class="mkt-section-header">
             <div class="mkt-pill-badge">
-              <span>AUTOMATED INTELLIGENCE</span>
+              <span>12 PRE-BUILT REPORTS</span>
             </div>
-            <h2 class="mkt-section-title">Automated AI-Powered Business Insights.</h2>
+            <h2 class="mkt-section-title">Report Library & Export Center</h2>
             <p class="mkt-section-subtitle">
-              Universal ERP surfaces actionable operational opportunities and early warning alerts before they impact margins.
+              Instant access to 12 specialized accounting and operations reports. Filter, view, and export to PDF or CSV in seconds.
             </p>
           </div>
 
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; max-width:900px; margin:32px auto 0 auto;">
-            <div class="mkt-feature-card" style="padding:20px; border-left:4px solid #10b981;">
-              <b style="color:#34d399; font-size:13px;">📈 Growth Velocity</b>
-              <p style="font-size:12px; color:var(--mkt-text-muted); margin-top:4px;">Revenue is up 14.8% vs last month. Coffee Beans category is the primary driver.</p>
+          <div style="max-width:1080px; margin:0 auto;">
+            
+            <!-- Search & Filter Controls -->
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+              <input 
+                type="text" 
+                placeholder="🔍 Search reports by title or category..." 
+                oninput="window.searchReports(this.value)"
+                style="background:rgba(255,255,255,0.04); border:1px solid var(--mkt-border); border-radius:var(--mkt-radius-md); padding:10px 16px; color:#fff; font-size:14px; min-width:280px;"
+              />
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="mkt-tab-btn report-lib-filter-btn active" data-cat="all" onclick="window.filterReportLibrary('all')">All (12)</button>
+                <button class="mkt-tab-btn report-lib-filter-btn" data-cat="sales" onclick="window.filterReportLibrary('sales')">Sales</button>
+                <button class="mkt-tab-btn report-lib-filter-btn" data-cat="inventory" onclick="window.filterReportLibrary('inventory')">Inventory</button>
+                <button class="mkt-tab-btn report-lib-filter-btn" data-cat="purchasing" onclick="window.filterReportLibrary('purchasing')">Purchasing</button>
+                <button class="mkt-tab-btn report-lib-filter-btn" data-cat="finance" onclick="window.filterReportLibrary('finance')">Finance</button>
+                <button class="mkt-tab-btn report-lib-filter-btn" data-cat="customers" onclick="window.filterReportLibrary('customers')">Customers</button>
+              </div>
             </div>
 
-            <div class="mkt-feature-card" style="padding:20px; border-left:4px solid #fbbf24;">
-              <b style="color:#fbbf24; font-size:13px;">⚠️ Inventory Warning</b>
-              <p style="font-size:12px; color:var(--mkt-text-muted); margin-top:4px;">Organic Green Tea is approaching reorder level (12 units remaining in Store 02).</p>
-            </div>
+            <!-- 12 Reports Grid -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;" id="report-library-grid">
+              
+              <div class="mkt-feature-card report-lib-card" data-cat="finance" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">1. Profit & Loss Statement</b>
+                    <span class="mkt-badge mkt-badge-cyan">Finance</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Complete waterfall from sales through COGS and operating expenses to net retained profit.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Profit & Loss')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Profit & Loss')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Profit & Loss')">🖨️ Print</button>
+                </div>
+              </div>
 
-            <div class="mkt-feature-card" style="padding:20px; border-left:4px solid #f87171;">
-              <b style="color:#f87171; font-size:13px;">💳 Receivables Alert</b>
-              <p style="font-size:12px; color:var(--mkt-text-muted); margin-top:4px;">PKR 18,400 in receivables from Green Basket Organic are overdue (>30 days).</p>
-            </div>
+              <div class="mkt-feature-card report-lib-card" data-cat="sales" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">2. Daily Sales Summary</b>
+                    <span class="mkt-badge mkt-badge-cyan">Sales</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Daily gross sales, order volume, tax collected, and discount impact by register.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Sales Summary')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Sales Summary')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Sales Summary')">🖨️ Print</button>
+                </div>
+              </div>
 
-            <div class="mkt-feature-card" style="padding:20px; border-left:4px solid #60a5fa;">
-              <b style="color:#60a5fa; font-size:13px;">📊 Margin Opportunity</b>
-              <p style="font-size:12px; color:var(--mkt-text-muted); margin-top:4px;">Coffee category delivers 38% of total gross profit with 34.2% margin.</p>
+              <div class="mkt-feature-card report-lib-card" data-cat="sales" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">3. Sales by Product (Itemized)</b>
+                    <span class="mkt-badge mkt-badge-cyan">Sales</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Rank product SKUs by units moved, gross revenue contribution, and product margin.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Sales by Product')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Sales by Product')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Sales by Product')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="customers" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">4. Sales by Customer</b>
+                    <span class="mkt-badge mkt-badge-cyan">Customers</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Identify high-value commercial accounts and analyze customer purchase frequencies.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Sales by Customer')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Sales by Customer')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Sales by Customer')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="inventory" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">5. Inventory Asset Valuation</b>
+                    <span class="mkt-badge mkt-badge-cyan">Inventory</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">FIFO-based asset valuation report across Central Depot and individual storefronts.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Inventory Valuation')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Inventory Valuation')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Inventory Valuation')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="inventory" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">6. Stock Movement & Ledger</b>
+                    <span class="mkt-badge mkt-badge-cyan">Inventory</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Audit every addition, transfer, disposal, and sale deduction with user timestamps.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Stock Movement')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Stock Movement')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Stock Movement')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="purchasing" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">7. Purchase Order Summary</b>
+                    <span class="mkt-badge mkt-badge-cyan">Purchasing</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Track PO lifecycle stages, received goods variances, and pending fulfillment rates.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Purchase Summary')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Purchase Summary')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Purchase Summary')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="purchasing" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">8. Supplier Payables Aging</b>
+                    <span class="mkt-badge mkt-badge-cyan">Purchasing</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Accounts payable aging schedule across 0-30, 31-60, and 61+ day brackets.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Supplier Payables')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Supplier Payables')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Supplier Payables')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="customers" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">9. Customer Receivables Aging</b>
+                    <span class="mkt-badge mkt-badge-cyan">Customers</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Detailed customer balance aging ledger with credit limit warnings and payment history.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Customer Receivables')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Customer Receivables')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Customer Receivables')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="finance" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">10. Expense Classification Summary</b>
+                    <span class="mkt-badge mkt-badge-cyan">Finance</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Categorized operating expenses breakdown by utilities, salaries, logistics, and rent.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Expense Summary')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Expense Summary')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Expense Summary')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="finance" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">11. Cash Flow & Drawer Statement</b>
+                    <span class="mkt-badge mkt-badge-cyan">Finance</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Reconcile physical cash tender collections against card payouts and bank accounts.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Cash Flow Statement')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Cash Flow Statement')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Cash Flow Statement')">🖨️ Print</button>
+                </div>
+              </div>
+
+              <div class="mkt-feature-card report-lib-card" data-cat="sales" style="padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <b style="font-size:15px; color:#fff;">12. Multi-Location Comparative</b>
+                    <span class="mkt-badge mkt-badge-cyan">Sales</span>
+                  </div>
+                  <p style="font-size:12px; color:var(--mkt-text-muted);">Side-by-side branch comparison of revenue, transaction size, and local profit contribution.</p>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:14px; pt:8px; border-top:1px solid var(--mkt-border);">
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('PDF Exported', 'Multi-Location Comparative')">📄 PDF</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('CSV Exported', 'Multi-Location Comparative')">📊 CSV</button>
+                  <button class="mkt-btn mkt-btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="window.triggerReportAction('Print Formatted', 'Multi-Location Comparative')">🖨️ Print</button>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -717,46 +1098,67 @@ export function renderProductReportsPage() {
       </section>
 
       <!-- =========================================================================
-           SECTION 11: REPORTS, CONTROLS & AUDITABILITY
+           SECTION 11: CONTROLS, AUDITABILITY & DECISION INTELLIGENCE
            ========================================================================= -->
       <section class="mkt-section">
         <div class="mkt-container">
           
           <div class="mkt-section-header">
             <div class="mkt-pill-badge">
-              <span>AUDIT & GOVERNANCE</span>
+              <span>GOVERNANCE & TRUST</span>
             </div>
-            <h2 class="mkt-section-title">Role-Based Access & Transaction Auditability.</h2>
+            <h2 class="mkt-section-title">Controls, Auditability & Decision Intelligence</h2>
             <p class="mkt-section-subtitle">
-              Every financial figure on every report links directly to underlying transaction vouchers, invoices, and register shift logs.
+              Role-based security guarantees only authorized team members view sensitive margins while preserving complete transactional audit trails.
             </p>
           </div>
 
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:20px; margin-top:32px;">
-            <div class="mkt-feature-card" style="padding:22px;">
-              <div style="font-size:24px; margin-bottom:8px;">📅</div>
-              <h4 style="font-size:15px; font-weight:700; color:var(--mkt-text-main); margin-bottom:4px;">Scheduled Email Reports</h4>
-              <p style="font-size:12px; color:var(--mkt-text-muted); line-height:1.5;">Automated daily Z-reports and monthly executive summaries delivered to your inbox.</p>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1080px; margin:0 auto 32px;">
+            
+            <div class="mkt-feature-card" style="padding:24px;">
+              <div style="font-size:24px; margin-bottom:12px;">🛡️</div>
+              <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Role-Based Access Control</h3>
+              <p style="font-size:13px; color:var(--mkt-text-muted); line-height:1.5; margin-bottom:12px;">
+                Granular permissions separate cashier operational shift views from executive P&L margins.
+              </p>
+              <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:var(--mkt-radius-md); font-size:12px;">
+                <div>👑 <b>Owner:</b> Full Financial & Executive Reports</div>
+                <div style="margin-top:4px;">👔 <b>Manager:</b> Operational + Financial Reports</div>
+                <div style="margin-top:4px;">⚡ <b>Cashier:</b> Sales + Shift Tender Reports</div>
+              </div>
             </div>
 
-            <div class="mkt-feature-card" style="padding:22px;">
-              <div style="font-size:24px; margin-bottom:8px;">👑</div>
-              <h4 style="font-size:15px; font-weight:700; color:var(--mkt-text-main); margin-bottom:4px;">Strict Financial RBAC</h4>
-              <p style="font-size:12px; color:var(--mkt-text-muted); line-height:1.5;">Restrict profit margins and tax declarations to Company Owners and authorized Managers.</p>
+            <div class="mkt-feature-card" style="padding:24px;">
+              <div style="font-size:24px; margin-bottom:12px;">🔒</div>
+              <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Immutable Transaction Sources</h3>
+              <p style="font-size:13px; color:var(--mkt-text-muted); line-height:1.5; margin-bottom:12px;">
+                Every report metric is mathematically bound to double-entry ledger postings with zero possibility of manual figure tampering.
+              </p>
+              <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:var(--mkt-radius-md); font-size:12px; color:#34d399;">
+                ✓ Strict Double-Entry Ledger Verification
+              </div>
             </div>
 
-            <div class="mkt-feature-card" style="padding:22px;">
-              <div style="font-size:24px; margin-bottom:8px;">📄</div>
-              <h4 style="font-size:15px; font-weight:700; color:var(--mkt-text-main); margin-bottom:4px;">Print & PDF Export</h4>
-              <p style="font-size:12px; color:var(--mkt-text-muted); line-height:1.5;">One-click generation of audit-ready PDF statements and Excel data workbooks.</p>
-              <div style="margin-top:8px;"><a href="javascript:void(0)" onclick="window.navigateMarketing('/product/documents')" style="font-size:11px; font-weight:700; color:#60a5fa; text-decoration:none;">→ Documents Hub</a></div>
+            <div class="mkt-feature-card" style="padding:24px;">
+              <div style="font-size:24px; margin-bottom:12px;">📑</div>
+              <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Export History & Audit Trail</h3>
+              <p style="font-size:13px; color:var(--mkt-text-muted); line-height:1.5; margin-bottom:12px;">
+                Track every report generation, PDF download, and CSV export with timestamps and IP logging.
+              </p>
+              <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:var(--mkt-radius-md); font-size:12px; color:#60a5fa;">
+                ✓ Complete Compliance & Regulatory Readiness
+              </div>
             </div>
 
-            <div class="mkt-feature-card" style="padding:22px;">
-              <div style="font-size:24px; margin-bottom:8px;">🔒</div>
-              <h4 style="font-size:15px; font-weight:700; color:var(--mkt-text-main); margin-bottom:4px;">Traceable Audit Trail</h4>
-              <p style="font-size:12px; color:var(--mkt-text-muted); line-height:1.5;">Click any ledger balance to drill down into the original sales invoice or payment slip.</p>
-              <div style="margin-top:8px;"><a href="javascript:void(0)" onclick="window.navigateMarketing('/product/integrations')" style="font-size:11px; font-weight:700; color:#60a5fa; text-decoration:none;">→ Developer API</a></div>
+          </div>
+
+          <!-- Decision Intelligence Chain -->
+          <div style="background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.25); border-radius:var(--mkt-radius-lg); padding:20px; max-width:1080px; margin:0 auto; text-align:center;">
+            <div style="font-size:14px; font-weight:800; color:#fff; margin-bottom:4px;">
+              Operational Data → Verified Calculations → Reports → Decisions
+            </div>
+            <div style="font-size:12px; color:var(--mkt-text-muted);">
+              Universal ERP guarantees that reporting is an automated reflection of real work, giving owners clarity to scale safely.
             </div>
           </div>
 
@@ -764,44 +1166,52 @@ export function renderProductReportsPage() {
       </section>
 
       <!-- =========================================================================
-           SECTION 12: FINAL CTA
+           SECTION 12: FINAL CALL TO ACTION & 5-COLUMN FOOTER
            ========================================================================= -->
       <section class="mkt-section mkt-cta-section">
         <div class="mkt-container">
           <div class="mkt-cta-card">
             
-            <h2 class="mkt-cta-title">Stop Guessing. Start Running Your<br>Business From The Numbers.</h2>
+            <h2 class="mkt-cta-title">Stop Guessing. Start Running Your Business From The Numbers.</h2>
             <p class="mkt-cta-desc">
-              Connect every operational activity to clear financial and business intelligence with Universal ERP.
+              Connected reporting across Sales, Inventory, Purchasing, Customers, Suppliers, and Payments.
             </p>
 
             <div class="mkt-cta-actions">
               <button class="mkt-btn mkt-btn-primary mkt-btn-lg" onclick="window.navigateMarketing('/auth/register')">
-                Start Tracking Performance →
+                <span>Start Analyzing</span>
+                <span>→</span>
               </button>
-              <button class="mkt-btn mkt-btn-secondary mkt-btn-lg" onclick="window.navigateMarketing('/product')">
-                Explore The Platform
+              <button class="mkt-btn mkt-btn-secondary mkt-btn-lg" onclick="window.navigateMarketing('/product/inventory')">
+                <span>Explore Inventory</span>
               </button>
+            </div>
+
+            <div class="mkt-cta-subtext">
+              <span>✓ 14-day free trial</span>
+              <span>•</span>
+              <span>✓ No credit card required</span>
+              <span>•</span>
+              <span>✓ Ready in under 5 minutes</span>
             </div>
 
           </div>
         </div>
       </section>
 
-      <!-- Footer -->
+      <!-- 5-Column Universal ERP Footer -->
       <footer class="mkt-footer">
         <div class="mkt-container">
           <div class="mkt-footer-grid">
-            <div class="mkt-footer-brand">
+            
+            <div class="mkt-footer-brand-col">
               <div class="mkt-brand" onclick="window.navigateMarketing('/')">
                 <div class="mkt-brand-logo">🌐</div>
                 <span class="mkt-brand-name">Universal ERP</span>
               </div>
-              <p class="mkt-footer-tagline">The Universal Business Operating System for high-performing commerce and modern retail.</p>
-              <div class="mkt-footer-status">
-                <span class="mkt-status-dot"></span>
-                <span>Universal Cloud OS • All Systems Operational</span>
-              </div>
+              <p class="mkt-footer-bio">
+                The Universal Business Operating System for high-performing commerce and modern retail. Universal Cloud OS • All Systems Operational.
+              </p>
             </div>
 
             <div class="mkt-footer-col">
@@ -855,6 +1265,7 @@ export function renderProductReportsPage() {
                 <li><a href="javascript:void(0)" onclick="window.navigateMarketing('/company/contact')">Contact & Demo</a></li>
               </ul>
             </div>
+
           </div>
 
           <div class="mkt-footer-bottom">
@@ -868,25 +1279,32 @@ export function renderProductReportsPage() {
         </div>
       </footer>
 
-      <!-- Mobile Drawer -->
+      <!-- Mobile Navigation Drawer -->
       <div class="mkt-mobile-drawer" id="mkt-mobile-menu">
-        <button class="mkt-mobile-close" onclick="window.toggleMarketingMenu()">✕</button>
-        <div style="font-weight:700; color:var(--mkt-text-main); margin-bottom:16px;">Navigation</div>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/'); window.toggleMarketingMenu()">Home</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product'); window.toggleMarketingMenu()">Product Overview</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/pos'); window.toggleMarketingMenu()">Point of Sale</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/inventory'); window.toggleMarketingMenu()">Inventory</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/sales'); window.toggleMarketingMenu()">Sales & Invoicing</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/purchasing'); window.toggleMarketingMenu()">Purchasing & POs</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/customers'); window.toggleMarketingMenu()">Customers & CRM</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/suppliers'); window.toggleMarketingMenu()">Suppliers & Vendors</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/payments'); window.toggleMarketingMenu()">Payments & Expenses</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/reports'); window.toggleMarketingMenu()">Reports & Analytics</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/documents'); window.toggleMarketingMenu()">Documents & Receipts</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/integrations'); window.toggleMarketingMenu()">Integrations & API</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/pricing'); window.toggleMarketingMenu()">Pricing</a>
-        <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/resources'); window.toggleMarketingMenu()">Resources</a>
-        <div style="margin-top:24px; display:flex; flex-direction:column; gap:10px;">
+        <div class="mkt-mobile-header">
+          <div class="mkt-brand" onclick="window.navigateMarketing('/'); window.toggleMarketingMenu();">
+            <div class="mkt-brand-logo">🌐</div>
+            <span class="mkt-brand-name">Universal ERP</span>
+          </div>
+          <button class="mkt-mobile-close" onclick="window.toggleMarketingMenu()">✕</button>
+        </div>
+        <div class="mkt-mobile-nav">
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/'); window.toggleMarketingMenu()">Home</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product'); window.toggleMarketingMenu()">Product Overview</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/pos'); window.toggleMarketingMenu()">Point of Sale</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/inventory'); window.toggleMarketingMenu()">Inventory</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/sales'); window.toggleMarketingMenu()">Sales & Invoicing</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/purchasing'); window.toggleMarketingMenu()">Purchasing & POs</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/customers'); window.toggleMarketingMenu()">Customers & CRM</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/suppliers'); window.toggleMarketingMenu()">Suppliers & Vendors</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/payments'); window.toggleMarketingMenu()">Payments & Expenses</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/reports'); window.toggleMarketingMenu()">Reports & Analytics</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/documents'); window.toggleMarketingMenu()">Documents & Receipts</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/product/integrations'); window.toggleMarketingMenu()">Integrations & API</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/pricing'); window.toggleMarketingMenu()">Pricing</a>
+          <a class="mkt-mobile-link" href="javascript:void(0)" onclick="window.navigateMarketing('/resources'); window.toggleMarketingMenu()">Resources</a>
+        </div>
+        <div class="mkt-mobile-actions">
           <button class="mkt-btn mkt-btn-ghost" onclick="window.navigateMarketing('/auth/login'); window.toggleMarketingMenu()">Sign In</button>
           <button class="mkt-btn mkt-btn-primary" onclick="window.navigateMarketing('/auth/register'); window.toggleMarketingMenu()">Get Started Free</button>
         </div>
